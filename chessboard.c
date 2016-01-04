@@ -78,11 +78,15 @@ void PrintBoard()
     }
 }
 
-void ReadInput()
-{
+void ReadInput() {
     char move[4];
     scanf("%s", &move);
-    // is input legal? a-h, 1-8.
+
+    // Checking if the input is within the restricted files (a-h) and ranks 1-8.
+    if(((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') && ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
+        printf("move from and to should be okay.\n");
+    }
+
     Move(move);
 }
 
