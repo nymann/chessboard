@@ -2,9 +2,9 @@
 #include "Definitions.h"
 
 void PrintBoard();
-
+int KnightRules(int moveFrom, int moveTo);
 void ReadInput();
-
+void ValidMoveMade(int moveFrom, int moveTo);
 void Move(char move[]);
 
 int main() {
@@ -106,6 +106,13 @@ void Move(char move[]) {
                 break;
             case N:
                 printf("white knight.\n");
+                if(KnightRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.");
+                    ReadInput();
+                }
                 break;
             case B:
                 printf("white bishop.\n");
@@ -122,10 +129,6 @@ void Move(char move[]) {
                 ReadInput();
                 break;
         }
-        board[moveTo] = board[moveFrom];
-        board[moveFrom] = E;
-        halfMoves++;
-        PrintBoard();
     }
 
         // Black to move?
@@ -134,12 +137,16 @@ void Move(char move[]) {
         switch (board[moveFrom]) {
             case p:
                 printf("black pawn.\n");
+
                 break;
             case r:
                 printf("black rook.\n");
                 break;
             case n:
                 printf("black knight.\n");
+                if(KnightRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
                 break;
             case b:
                 printf("black bishop.\n");
@@ -155,10 +162,6 @@ void Move(char move[]) {
                 ReadInput();
                 break;
         }
-        board[moveTo] = board[moveFrom];
-        board[moveFrom] = E;
-        halfMoves++;
-        PrintBoard();
     }
     else {
         // The move from square is either empty or it's not your
@@ -170,4 +173,47 @@ void Move(char move[]) {
         }
         ReadInput();
     }
+}
+
+int KnightRules(int moveTo, int moveFrom) {
+    // Since we already checked if the moveTo square is blocked by our own piece, we don't have to consider it here.
+    int validSquares[8] = {F, F, F, F, F, F, F, F};
+    if(board[moveFrom + 21] != F) {
+        validSquares[0] = moveFrom + 21;
+    }
+    if(board[moveFrom - 21] != F) {
+        validSquares[1] = moveFrom - 21;
+    }
+    if(board[moveFrom + 19] != F) {
+        validSquares[2] = moveFrom + 19;
+    }
+    if(board[moveFrom - 19] != F) {
+        validSquares[3] = moveFrom - 19;
+    }
+    if(board[moveFrom + 12] != F) {
+        validSquares[4] = moveFrom + 12;
+    }
+    if(board[moveFrom - 12] != F) {
+        validSquares[5] = moveFrom - 12;
+    }
+    if(board[moveFrom + 8] != F) {
+        validSquares[6] = moveFrom + 8;
+    }
+    if(board[moveFrom - 8] != F) {
+        validSquares[7] = moveFrom - 8;
+    }
+
+    for (int i = 0; i < 8; ++i) {
+        if(moveTo == validSquares[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+void ValidMoveMade(int moveTo, int moveFrom) {
+    board[moveTo] = board[moveFrom];
+    board[moveFrom] = E;
+    halfMoves++;
+    PrintBoard();
 }
