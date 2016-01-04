@@ -2,21 +2,21 @@
 #include "Definitions.h"
 
 void PrintBoard();
+
 void ReadInput();
+
 void Move(char move[]);
 
-int main()
-{
+int main() {
     PrintBoard();
-    while(1) {
+    while (1) {
         ReadInput();
     }
 
-    return 0;
+    //return 0; redundant when we have an endless while loop.
 }
 
-void PrintBoard()
-{
+void PrintBoard() {
     for (int i = 0; i < 12; i++) {
         for (int j = 0; j < 10; j++) {
             switch (board[i * 10 + j]) {
@@ -82,20 +82,21 @@ void ReadInput() {
     scanf("%s", &move);
 
     // Checking if the input is within the restricted files (a-h) and ranks 1-8.
-    if(((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') && ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
+    if (((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') &&
+        ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
         Move(move);
     } else {
         printf("move is not valid, moves should be on the form: 'e2e4'.\n");
     }
 }
 
-void Move(char move[])
-{
+void Move(char move[]) {
     int moveFrom = 100 - (move[1] - '0') * 10 + (move[0] - 96);
     int moveTo = 100 - (move[3] - '0') * 10 + (move[2] - 96);
 
     // White to move?
-    if(halfMoves % 2 == 0 && board[moveFrom] >= P && board[moveFrom] <= K && (board[moveTo] == E || (board[moveTo] <= k && board[moveTo] >= p))){
+    if (halfMoves % 2 == 0 && board[moveFrom] >= P && board[moveFrom] <= K &&
+        (board[moveTo] == E || (board[moveTo] <= k && board[moveTo] >= p))) {
         switch (board[moveFrom]) {
             case P:
                 printf("white pawn.\n");
@@ -127,8 +128,9 @@ void Move(char move[])
         PrintBoard();
     }
 
-    // Black to move?
-    else if(halfMoves % 2 == 1 && board[moveFrom] >= p && board[moveFrom] <= k && (board[moveTo] == E || (board[moveTo] <= K && board[moveTo] >= P))){
+        // Black to move?
+    else if (halfMoves % 2 == 1 && board[moveFrom] >= p && board[moveFrom] <= k &&
+             (board[moveTo] == E || (board[moveTo] <= K && board[moveTo] >= P))) {
         switch (board[moveFrom]) {
             case p:
                 printf("black pawn.\n");
@@ -160,7 +162,7 @@ void Move(char move[])
     }
     else {
         // The move from square is either empty or it's not your
-        if(halfMoves%2==0) {
+        if (halfMoves % 2 == 0) {
             printf("It's whites turn to play and/or %c%c is empty.\n", move[0], move[1]);
         }
         else {

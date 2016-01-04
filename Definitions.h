@@ -38,7 +38,7 @@ knight can move to square 45, 47 and 52.
 
 But if we calculated the squares with the formula above.. we would get:
 62+2*8+1=79, 62+2*8-1=77, 62-2*8+1=47, 62-2*8-1=45, 62+8+2=72, 62+8-2=68, 62-8+2=56, 62-8-2=52.
-In total, 5 illegal moves.. we could hardcode these cases (if pieceIsOnRankOne) { do something }, but that
+In total, 5 illegal moves.. we could hard code these cases (if pieceIsOnRankOne) { do something }, but that
 would be rather trivial and the chance of missing a case high, resulting in a lot of debugging..
 
 Instead we use a 10*12 array, like pictured above where X's indicates OFFBOARD.. this ensures, that we
