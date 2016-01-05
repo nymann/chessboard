@@ -11,6 +11,8 @@ int RookRules(int moveTo, int moveFrom);
 
 int BishopRules(int moveTo, int moveFrom);
 
+int KingRules(int moveTo, int moveFrom);
+
 void ReadInput();
 
 void ValidMoveMade(int moveFrom, int moveTo);
@@ -145,13 +147,18 @@ void Move(char move[]) {
                     printf("Invalid move.\n");
                     ReadInput();
                 }
-                printf("come on.\n");
                 break;
             case Q:
                 printf("white queen.\n");
                 break;
             case K:
-                printf("white king.\n");
+                if (KingRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
 
             default:
@@ -205,7 +212,13 @@ void Move(char move[]) {
                 printf("black queen.\n");
                 break;
             case k:
-                printf("black king.\n");
+                if (KingRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             default:
                 printf("try again.\n");
@@ -459,6 +472,62 @@ int BishopRules(int moveTo, int moveFrom) {
             return 1;
         }
     }
+    return 0;
+}
+
+int KingRules(int moveTo, int moveFrom) {
+    int validMoves[11] = {F, F, F, F, F, F, F, F, F, F, F};
+    int k = 0;
+    if(board[moveFrom + 1] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 1, halfMoves%2)) {
+        validMoves[k] = moveFrom + 1;
+        k++;
+    }
+    if(board[moveFrom - 1] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 1, halfMoves%2)) {
+        validMoves[k] = moveFrom - 1;
+        k++;
+    }
+    if(board[moveFrom - 9] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 9, halfMoves%2)) {
+        validMoves[k] = moveFrom - 9;
+        k++;
+    }
+    if(board[moveFrom - 10] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 10, halfMoves%2)) {
+        validMoves[k] = moveFrom - 10;
+        k++;
+    }
+    if(board[moveFrom - 11] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 11, halfMoves%2)) {
+        validMoves[k] = moveFrom - 11;
+        k++;
+    }
+    if(board[moveFrom + 9] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 9, halfMoves%2)) {
+        validMoves[k] = moveFrom + 9;
+        k++;
+    }
+    if(board[moveFrom + 10] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 10, halfMoves%2)) {
+        validMoves[k] = moveFrom + 10;
+        k++;
+    }
+    if(board[moveFrom + 11] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 11, halfMoves%2)) {
+        validMoves[k] = moveFrom + 11;
+        k++;
+    }
+    // Is whites king on it's home scare and can he castle kingside or queenside?
+    if(moveFrom == 95 && whiteKingsideCastle == 1 && board[96] == E && board[97] == E) {
+        printf("White kingside castling is available.\n");
+    } else if(moveFrom == 25 && blackKingsideCastle == 1 && board[26] == E && board[27] == E) {
+        printf("Black can castle kingside.\n");
+    }
+    if(moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E) {
+        printf("White queenside castling is available.\n");
+    } else if(moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E) {
+        printf("Black can castle queenside.\n");
+    }
+
+    for (int i = 0; i < k; ++i) {
+        if(validMoves[i] == moveTo) {
+            return 1;
+        }
+    }
+
     return 0;
 }
 

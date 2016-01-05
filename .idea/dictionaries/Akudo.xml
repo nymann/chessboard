@@ -2,8 +2,10 @@
   <dictionary name="Akudo">
     <words>
       <w>captionable</w>
+      <w>kingside</w>
       <w>offboard</w>
       <w>passant</w>
+      <w>queenside</w>
     </words>
   </dictionary>
 </component>

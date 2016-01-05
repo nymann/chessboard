@@ -86,3 +86,7 @@ extern int board[120] = {
 };
 
 extern int halfMoves = 0;
+extern int whiteQueensideCastle = 1;
+extern int whiteKingsideCastle = 1;
+extern int blackKingsideCastle = 1;
+extern int blackQueensideCastle = 1;
