@@ -399,6 +399,17 @@ int RookRules(int moveTo, int moveFrom) {
         i++;
     }
 
+    // Check if we should disable a castling opportunity due to rock being moved from it's start squares.
+    if(moveFrom == 98) {
+        whiteKingsideCastle = 0;
+    } else if(moveFrom == 91) {
+        whiteQueensideCastle = 0;
+    } else if(moveFrom == 28) {
+        blackKingsideCastle = 0;
+    } else if (moveFrom == 21) {
+        blackQueensideCastle = 0;
+    }
+
     for (int j = 0; j < 14; ++j) {
         if (validSquares[j] == moveTo) {
             return 1;
