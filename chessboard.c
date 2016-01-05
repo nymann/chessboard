@@ -93,8 +93,11 @@ void ReadInput() {
     if (((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') &&
         ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
         Move(move);
-    } else {
-        printf("move is not valid, moves should be on the form: 'e2e4'.\n");
+    }
+    else {
+        printf("wrong.");
+        //printf("move is not valid, moves should be on the form: 'e2e4'.\nInput was %c%c%c%c", move[0], move[1], move[2], move[3]);
+        ReadInput();
     }
 }
 
@@ -165,7 +168,13 @@ void Move(char move[]) {
                 }
                 break;
             case r:
-                printf("black rook.\n");
+                if (RookRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             case n:
                 if (KnightRules(moveTo, moveFrom) == 1) {
@@ -292,19 +301,80 @@ int KnightRules(int moveTo, int moveFrom) {
 
 int RookRules(int moveTo, int moveFrom) {
     int validSquares[14] = {F, F, F, F, F, F, F, F, F, F, F, F, F, F};
-
     // Vertical moves negative direction. (fx. from the 1st rank to 8th rank).
+    int k = 0;
     int i = 1;
-    if (halfMoves % 2 == WHITE) {
-        printf("Hello from RookRules WHITE.\nboard[moveFrom - (10 * i)] = %d", board[moveFrom - (10 * i)]);
-
-        while (board[moveFrom - (10 * i)] == E || (board[moveFrom - (10 * i)] >= p && board[moveFrom - (10 * i)] <= k)) {
-            validSquares[i] = moveFrom - (10 * i);
+    while (board[moveFrom - (i * 10)] != F) {
+        if (board[moveFrom - (i * 10)] == E) {
+            validSquares[k] = moveFrom - (i * 10);
+            k++;
         }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom - (i * 10), halfMoves % 2) == 1) {
+            validSquares[k] = moveFrom - (i * 10);
+            k++;
+            break;
+        }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom - (i * 10), halfMoves % 2) == 0) {
+            break;
+        }
+        i++;
     }
+
+    i = 1;
+    while (board[moveFrom + (i * 10)] != F) {
+        if (board[moveFrom + (i * 10)] == E) {
+            validSquares[k] = moveFrom + (i * 10);
+            k++;
+        }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom + (i * 10), halfMoves % 2) == 1) {
+            validSquares[k] = moveFrom + (i * 10);
+            k++;
+            break;
+        }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom + (i * 10), halfMoves % 2) == 0) {
+            break;
+        }
+        i++;
+    }
+
+    // Horizontal direction positive.
+    i = 1;
+    while (board[moveFrom + i] != F) {
+        if (board[moveFrom + i] == E) {
+            validSquares[k] = moveFrom + i;
+            k++;
+        }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom + i, halfMoves % 2) == 1) {
+            validSquares[k] = moveFrom + i;
+            k++;
+            break;
+        }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom + i, halfMoves % 2) == 0) {
+            break;
+        }
+        i++;
+    }
+
+    // Horizontal  direction negative
+    i = 1;
+    while (board[moveFrom - i] != F) {
+        if (board[moveFrom - i] == E) {
+            validSquares[k] = moveFrom - i;
+            k++;
+        }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) == 1) {
+            validSquares[k] = moveFrom - i;
+            k++;
+            break;
+        }
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) == 0) {
+            break;
+        }
+        i++;
+    }
+
     for (int j = 0; j < 14; ++j) {
-        printf("%d, ", validSquares[i]);
-        if (moveTo == validSquares[i]) {
+        if (validSquares[j] == moveTo) {
             return 1;
         }
     }
