@@ -13,6 +13,8 @@ int BishopRules(int moveTo, int moveFrom);
 
 int KingRules(int moveTo, int moveFrom);
 
+int QueenRules(int moveTo, int moveFrom);
+
 void ReadInput();
 
 void ValidMoveMade(int moveFrom, int moveTo);
@@ -149,7 +151,13 @@ void Move(char move[]) {
                 }
                 break;
             case Q:
-                printf("white queen.\n");
+                if (QueenRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             case K:
                 if (KingRules(moveTo, moveFrom) == 1) {
@@ -209,7 +217,13 @@ void Move(char move[]) {
                 }
                 break;
             case q:
-                printf("black queen.\n");
+                if (QueenRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             case k:
                 if (KingRules(moveTo, moveFrom) == 1) {
@@ -528,7 +542,13 @@ int KingRules(int moveTo, int moveFrom) {
         }
     }
 
+    //TODO(Implement castling).
+
     return 0;
+}
+
+int QueenRules(int moveTo, int moveFrom) {
+    return RookRules(moveTo, moveFrom) || BishopRules(moveTo, moveFrom);
 }
 
 void ValidMoveMade(int moveTo, int moveFrom) {

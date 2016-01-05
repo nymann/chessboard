@@ -69,6 +69,7 @@ be read here https://chessprogramming.wikispaces.com/10x12+Board.
 #define F 99
 enum { E, P, R, N, B, Q, K, p, r, n, b, q, k };
 enum {WHITE, BLACK};
+enum {WKC, WQC, BKC, BQC};
 
 extern int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
