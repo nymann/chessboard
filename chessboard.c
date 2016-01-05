@@ -11,11 +11,11 @@ void ValidMoveMade(int moveFrom, int moveTo);
 
 void Move(char move[]);
 
+int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
+
 int main() {
     PrintBoard();
-    while (1) {
-        ReadInput();
-    }
+    ReadInput();
 
     //return 0; redundant when we have an endless while loop.
 }
@@ -93,7 +93,6 @@ void ReadInput() {
         printf("move is not valid, moves should be on the form: 'e2e4'.\n");
     }
 }
-int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 
 void Move(char move[]) {
     int moveFrom = 100 - (move[1] - '0') * 10 + (move[0] - 96);
@@ -104,7 +103,13 @@ void Move(char move[]) {
         (board[moveTo] == E || (board[moveTo] <= k && board[moveTo] >= p))) {
         switch (board[moveFrom]) {
             case P:
-                printf("white pawn.\n");
+                if (PawnRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             case R:
                 printf("white rook.\n");
@@ -115,7 +120,7 @@ void Move(char move[]) {
                     ValidMoveMade(moveTo, moveFrom);
                 }
                 else {
-                    printf("Invalid move.");
+                    printf("Invalid move.\n");
                     ReadInput();
                 }
                 break;
@@ -141,16 +146,24 @@ void Move(char move[]) {
              (board[moveTo] == E || (board[moveTo] <= K && board[moveTo] >= P))) {
         switch (board[moveFrom]) {
             case p:
-                printf("black pawn.\n");
-
+                if (PawnRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             case r:
                 printf("black rook.\n");
                 break;
             case n:
-                printf("black knight.\n");
                 if (KnightRules(moveTo, moveFrom) == 1) {
                     ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
                 }
                 break;
             case b:
@@ -174,7 +187,7 @@ void Move(char move[]) {
             printf("It's whites turn to play and/or %c%c is empty.\n", move[0], move[1]);
         }
         else {
-            printf("It's blacks turn to play and/or %c%c is empty.\n", move[0], move[1]);
+            printf("Invalid move\n");
         }
         ReadInput();
     }
@@ -193,15 +206,42 @@ int PawnRules(int moveTo, int moveFrom) {
                 validSquares[1] = moveFrom - 20;
             }
         }
+        if(board[moveFrom - 11] != F) {
+            validSquares[2] = moveFrom - 11;
+        }
+        if(board[moveFrom - 9] != F) {
+            validSquares[3] = moveFrom - 9;
+        }
 
-
-
-
+        //TODO(Implement En Passant)
+        //TODO(Implement Promotion)
     }
         // Black to move.
     else {
-
+        if (board[moveFrom + 10] == E) {
+            validSquares[0] = moveFrom + 10;
+            // We know that we can move the pawn forward one step, let's check if, it's on it's beginning square and if it can move two steps forward.
+            if (board[moveFrom + 20] == E && moveFrom / 7) {
+                validSquares[1] = moveFrom + 20;
+            }
+        }
+        if(board[moveFrom + 11] != F) {
+            validSquares[2] = moveFrom + 11;
+        }
+        if(board[moveFrom + 9] != F) {
+            validSquares[3] = moveFrom + 9;
+        }
     }
+
+    printf("Valid moves: ");
+    for (int i = 0; i < 4; ++i) {
+        printf("%d, ", validSquares[i]);
+        if (moveTo == validSquares[i]) {
+            return 1;
+        }
+    }
+    printf("\n");
+    return 0;
 }
 
 int KnightRules(int moveTo, int moveFrom) {
@@ -246,6 +286,7 @@ void ValidMoveMade(int moveTo, int moveFrom) {
     board[moveFrom] = E;
     halfMoves++;
     PrintBoard();
+    ReadInput();
 }
 
 int SquareOccupiedByOppositeColorPiece(int moveTo, int color) {
