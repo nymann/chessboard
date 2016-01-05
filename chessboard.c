@@ -15,6 +15,8 @@ int KingRules(int moveTo, int moveFrom);
 
 int QueenRules(int moveTo, int moveFrom);
 
+void Castle(int castle);
+
 void ReadInput();
 
 void ValidMoveMade(int moveFrom, int moveTo);
@@ -520,13 +522,17 @@ int KingRules(int moveTo, int moveFrom) {
     // Is whites king on it's home scare and can he castle kingside or queenside?
     if (moveFrom == 95 && whiteKingsideCastle == 1 && board[96] == E && board[97] == E) {
         printf("White kingside castling is available.\n");
+        Castle(WKC);
     } else if (moveFrom == 25 && blackKingsideCastle == 1 && board[26] == E && board[27] == E) {
         printf("Black can castle kingside.\n");
+        Castle(BKC);
     }
     if (moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E) {
         printf("White queenside castling is available.\n");
+        Castle(WQC);
     } else if (moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E) {
         printf("Black can castle queenside.\n");
+        Castle(BQC);
     }
 
     for (int i = 0; i < k; ++i) {
@@ -561,4 +567,31 @@ int SquareOccupiedByOppositeColorPiece(int moveTo, int color) {
     }
 
     return 0;
+}
+
+void Castle(int castle) {
+    if(castle == WKC) {
+        board[97] = K;
+        board[95] = E;
+        board[96] = R;
+        board[98] = E;
+    } else if(castle == WQC) {
+        board[91] = E;
+        board[94] = R;
+        board[93] = K;
+        board[95] = E;
+    } else if(castle == BKC) {
+        board[25] = E;
+        board[28] = E;
+        board[26] = r;
+        board[27] = k;
+    } else {
+        board[21] = E;
+        board[25] = E;
+        board[24] = r;
+        board[23] = k;
+    }
+    halfMoves++;
+    PrintBoard();
+    ReadInput();
 }
