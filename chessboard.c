@@ -398,58 +398,59 @@ int BishopRules(int moveTo, int moveFrom) {
     int k = 0;
 
     // Diagonal up right.
-    /*while(board[moveFrom - (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom - (i*9), halfMoves%2) == 0) {
-        printf("2");
+    while(board[moveFrom - (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom - (i*9), halfMoves%2) != 0) {
         if(board[moveFrom - (i*9)] == E) {
             validMoves[k] = moveFrom - (i*9);
+            k++;
         }
         else if(SquareOccupiedByOppositeColorPiece(moveFrom - (i*9), halfMoves%2)){
             validMoves[k] = moveFrom - (i*9);
+            k++;
             break;
         }
         i++;
-    }*/
+    }
 
     // Diagonal down right.
-    /*i=1;
-    printf("3");
-    while(board[moveFrom + (i*11)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*11), halfMoves%2) == 0) {
+    i=1;
+    while(board[moveFrom + (i*11)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*11), halfMoves%2) != 0) {
         if(board[moveFrom + (i*11)] == E) {
             validMoves[k] = moveFrom + (i*11);
+            k++;
         }
         else if(SquareOccupiedByOppositeColorPiece(moveFrom + (i*11), halfMoves%2)){
             validMoves[k] = moveFrom + (i*11);
+            k++;
             break;
         }
         i++;
-    }*/
+    }
 
     // Diagonal down left.
-    /*i=1;
-    while(board[moveFrom + (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*9), halfMoves%2) == 0) {
+    i=1;
+    while(board[moveFrom + (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*9), halfMoves%2) != 0) {
         if(board[moveFrom + (i*9)] == E) {
             validMoves[k] = moveFrom + (i*9);
+            k++;
         }
         else if(SquareOccupiedByOppositeColorPiece(moveFrom + (i*9), halfMoves%2)){
             validMoves[k] = moveFrom + (i*9);
+            k++;
             break;
         }
         i++;
-    }*/
+    }
 
     // Diagonal up left.
     i=1;
-    while(board[moveFrom - (i*11)] != F) {
-        printf("i = %d.\n", i);
+    while(board[moveFrom - (i*11)] != F || SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves % 2) != 0) {
         if(board[moveFrom - (i*11)] == E) {
-            printf("k = %d.\n");
             validMoves[k] = moveFrom - (i*11);
+            k++;
         }
         else if(SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves%2)){
             validMoves[k] = moveFrom - (i*11);
-            break;
-        }
-        else if (SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves % 2) == 0) {
+            k++;
             break;
         }
         i++;
@@ -457,9 +458,9 @@ int BishopRules(int moveTo, int moveFrom) {
 
     for (int j = 0; j < 13; ++j) {
         printf("%d, ", validMoves[j]);
-        /*if(validMoves[j] == moveTo) {
+        if(validMoves[j] == moveTo) {
             return 1;
-        }*/
+        }
     }
     return 0;
 }
