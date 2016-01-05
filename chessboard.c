@@ -97,8 +97,7 @@ void ReadInput() {
         Move(move);
     }
     else {
-        printf("wrong.");
-        //printf("move is not valid, moves should be on the form: 'e2e4'.\nInput was %c%c%c%c", move[0], move[1], move[2], move[3]);
+        printf("Invalid move.");
         ReadInput();
     }
 }
@@ -373,7 +372,6 @@ int RookRules(int moveTo, int moveFrom) {
         }
         else if (SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) == 1) {
             validSquares[k] = moveFrom - i;
-            k++;
             break;
         }
         else if (SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) == 0) {
@@ -391,8 +389,8 @@ int RookRules(int moveTo, int moveFrom) {
 }
 
 int BishopRules(int moveTo, int moveFrom) {
-    printf("movefrom = %d.\n", moveFrom);
-    printf("moveto = %d.\n", moveTo);
+    printf("moveFrom = %d.\n", moveFrom);
+    printf("moveTo = %d.\n", moveTo);
     int validMoves[13] = {F, F, F, F, F, F, F, F, F, F, F, F, F,};
     int i = 1;
     int k = 0;
@@ -450,7 +448,6 @@ int BishopRules(int moveTo, int moveFrom) {
         }
         else if(SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves%2)){
             validMoves[k] = moveFrom - (i*11);
-            k++;
             break;
         }
         i++;
