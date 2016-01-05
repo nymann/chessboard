@@ -339,7 +339,8 @@ int RookRules(int moveTo, int moveFrom) {
     // Vertical moves negative direction. (fx. from the 1st rank to 8th rank).
     int k = 0;
     int i = 1;
-    while (board[moveFrom - (i * 10)] != F) {
+    while (board[moveFrom - (i * 10)] != F ||
+           SquareOccupiedByOppositeColorPiece(moveFrom - (i * 10), halfMoves % 2) != 0) {
         if (board[moveFrom - (i * 10)] == E) {
             validSquares[k] = moveFrom - (i * 10);
             k++;
@@ -349,14 +350,12 @@ int RookRules(int moveTo, int moveFrom) {
             k++;
             break;
         }
-        else if (SquareOccupiedByOppositeColorPiece(moveFrom - (i * 10), halfMoves % 2) == 0) {
-            break;
-        }
         i++;
     }
 
     i = 1;
-    while (board[moveFrom + (i * 10)] != F) {
+    while (board[moveFrom + (i * 10)] != F ||
+           SquareOccupiedByOppositeColorPiece(moveFrom + (i * 10), halfMoves % 2) != 0) {
         if (board[moveFrom + (i * 10)] == E) {
             validSquares[k] = moveFrom + (i * 10);
             k++;
@@ -366,15 +365,12 @@ int RookRules(int moveTo, int moveFrom) {
             k++;
             break;
         }
-        else if (SquareOccupiedByOppositeColorPiece(moveFrom + (i * 10), halfMoves % 2) == 0) {
-            break;
-        }
         i++;
     }
 
     // Horizontal direction positive.
     i = 1;
-    while (board[moveFrom + i] != F) {
+    while (board[moveFrom + i] != F || SquareOccupiedByOppositeColorPiece(moveFrom + i, halfMoves % 2) != 0) {
         if (board[moveFrom + i] == E) {
             validSquares[k] = moveFrom + i;
             k++;
@@ -384,24 +380,18 @@ int RookRules(int moveTo, int moveFrom) {
             k++;
             break;
         }
-        else if (SquareOccupiedByOppositeColorPiece(moveFrom + i, halfMoves % 2) == 0) {
-            break;
-        }
         i++;
     }
 
     // Horizontal  direction negative
     i = 1;
-    while (board[moveFrom - i] != F) {
+    while (board[moveFrom - i] != F || SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) != 0) {
         if (board[moveFrom - i] == E) {
             validSquares[k] = moveFrom - i;
             k++;
         }
         else if (SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) == 1) {
             validSquares[k] = moveFrom - i;
-            break;
-        }
-        else if (SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) == 0) {
             break;
         }
         i++;
@@ -423,13 +413,14 @@ int BishopRules(int moveTo, int moveFrom) {
     int k = 0;
 
     // Diagonal up right.
-    while(board[moveFrom - (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom - (i*9), halfMoves%2) != 0) {
-        if(board[moveFrom - (i*9)] == E) {
-            validMoves[k] = moveFrom - (i*9);
+    while (board[moveFrom - (i * 9)] != F ||
+           SquareOccupiedByOppositeColorPiece(moveFrom - (i * 9), halfMoves % 2) != 0) {
+        if (board[moveFrom - (i * 9)] == E) {
+            validMoves[k] = moveFrom - (i * 9);
             k++;
         }
-        else if(SquareOccupiedByOppositeColorPiece(moveFrom - (i*9), halfMoves%2)){
-            validMoves[k] = moveFrom - (i*9);
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom - (i * 9), halfMoves % 2)) {
+            validMoves[k] = moveFrom - (i * 9);
             k++;
             break;
         }
@@ -437,14 +428,15 @@ int BishopRules(int moveTo, int moveFrom) {
     }
 
     // Diagonal down right.
-    i=1;
-    while(board[moveFrom + (i*11)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*11), halfMoves%2) != 0) {
-        if(board[moveFrom + (i*11)] == E) {
-            validMoves[k] = moveFrom + (i*11);
+    i = 1;
+    while (board[moveFrom + (i * 11)] != F ||
+           SquareOccupiedByOppositeColorPiece(moveFrom + (i * 11), halfMoves % 2) != 0) {
+        if (board[moveFrom + (i * 11)] == E) {
+            validMoves[k] = moveFrom + (i * 11);
             k++;
         }
-        else if(SquareOccupiedByOppositeColorPiece(moveFrom + (i*11), halfMoves%2)){
-            validMoves[k] = moveFrom + (i*11);
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom + (i * 11), halfMoves % 2)) {
+            validMoves[k] = moveFrom + (i * 11);
             k++;
             break;
         }
@@ -452,14 +444,15 @@ int BishopRules(int moveTo, int moveFrom) {
     }
 
     // Diagonal down left.
-    i=1;
-    while(board[moveFrom + (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*9), halfMoves%2) != 0) {
-        if(board[moveFrom + (i*9)] == E) {
-            validMoves[k] = moveFrom + (i*9);
+    i = 1;
+    while (board[moveFrom + (i * 9)] != F ||
+           SquareOccupiedByOppositeColorPiece(moveFrom + (i * 9), halfMoves % 2) != 0) {
+        if (board[moveFrom + (i * 9)] == E) {
+            validMoves[k] = moveFrom + (i * 9);
             k++;
         }
-        else if(SquareOccupiedByOppositeColorPiece(moveFrom + (i*9), halfMoves%2)){
-            validMoves[k] = moveFrom + (i*9);
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom + (i * 9), halfMoves % 2)) {
+            validMoves[k] = moveFrom + (i * 9);
             k++;
             break;
         }
@@ -467,22 +460,22 @@ int BishopRules(int moveTo, int moveFrom) {
     }
 
     // Diagonal up left.
-    i=1;
-    while(board[moveFrom - (i*11)] != F || SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves % 2) != 0) {
-        if(board[moveFrom - (i*11)] == E) {
-            validMoves[k] = moveFrom - (i*11);
+    i = 1;
+    while (board[moveFrom - (i * 11)] != F ||
+           SquareOccupiedByOppositeColorPiece(moveFrom - (i * 11), halfMoves % 2) != 0) {
+        if (board[moveFrom - (i * 11)] == E) {
+            validMoves[k] = moveFrom - (i * 11);
             k++;
         }
-        else if(SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves%2)){
-            validMoves[k] = moveFrom - (i*11);
+        else if (SquareOccupiedByOppositeColorPiece(moveFrom - (i * 11), halfMoves % 2)) {
+            validMoves[k] = moveFrom - (i * 11);
             break;
         }
         i++;
     }
 
     for (int j = 0; j < 13; ++j) {
-        printf("%d, ", validMoves[j]);
-        if(validMoves[j] == moveTo) {
+        if (validMoves[j] == moveTo) {
             return 1;
         }
     }
@@ -492,52 +485,52 @@ int BishopRules(int moveTo, int moveFrom) {
 int KingRules(int moveTo, int moveFrom) {
     int validMoves[11] = {F, F, F, F, F, F, F, F, F, F, F};
     int k = 0;
-    if(board[moveFrom + 1] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 1, halfMoves%2)) {
+    if (board[moveFrom + 1] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 1, halfMoves % 2)) {
         validMoves[k] = moveFrom + 1;
         k++;
     }
-    if(board[moveFrom - 1] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 1, halfMoves%2)) {
+    if (board[moveFrom - 1] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 1, halfMoves % 2)) {
         validMoves[k] = moveFrom - 1;
         k++;
     }
-    if(board[moveFrom - 9] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 9, halfMoves%2)) {
+    if (board[moveFrom - 9] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 9, halfMoves % 2)) {
         validMoves[k] = moveFrom - 9;
         k++;
     }
-    if(board[moveFrom - 10] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 10, halfMoves%2)) {
+    if (board[moveFrom - 10] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 10, halfMoves % 2)) {
         validMoves[k] = moveFrom - 10;
         k++;
     }
-    if(board[moveFrom - 11] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 11, halfMoves%2)) {
+    if (board[moveFrom - 11] == E || SquareOccupiedByOppositeColorPiece(moveFrom - 11, halfMoves % 2)) {
         validMoves[k] = moveFrom - 11;
         k++;
     }
-    if(board[moveFrom + 9] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 9, halfMoves%2)) {
+    if (board[moveFrom + 9] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 9, halfMoves % 2)) {
         validMoves[k] = moveFrom + 9;
         k++;
     }
-    if(board[moveFrom + 10] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 10, halfMoves%2)) {
+    if (board[moveFrom + 10] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 10, halfMoves % 2)) {
         validMoves[k] = moveFrom + 10;
         k++;
     }
-    if(board[moveFrom + 11] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 11, halfMoves%2)) {
+    if (board[moveFrom + 11] == E || SquareOccupiedByOppositeColorPiece(moveFrom + 11, halfMoves % 2)) {
         validMoves[k] = moveFrom + 11;
         k++;
     }
     // Is whites king on it's home scare and can he castle kingside or queenside?
-    if(moveFrom == 95 && whiteKingsideCastle == 1 && board[96] == E && board[97] == E) {
+    if (moveFrom == 95 && whiteKingsideCastle == 1 && board[96] == E && board[97] == E) {
         printf("White kingside castling is available.\n");
-    } else if(moveFrom == 25 && blackKingsideCastle == 1 && board[26] == E && board[27] == E) {
+    } else if (moveFrom == 25 && blackKingsideCastle == 1 && board[26] == E && board[27] == E) {
         printf("Black can castle kingside.\n");
     }
-    if(moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E) {
+    if (moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E) {
         printf("White queenside castling is available.\n");
-    } else if(moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E) {
+    } else if (moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E) {
         printf("Black can castle queenside.\n");
     }
 
     for (int i = 0; i < k; ++i) {
-        if(validMoves[i] == moveTo) {
+        if (validMoves[i] == moveTo) {
             return 1;
         }
     }
