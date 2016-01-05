@@ -9,6 +9,8 @@ int PawnRules(int moveTo, int moveFrom);
 
 int RookRules(int moveTo, int moveFrom);
 
+int BishopRules(int moveTo, int moveFrom);
+
 void ReadInput();
 
 void ValidMoveMade(int moveFrom, int moveTo);
@@ -21,7 +23,7 @@ int main() {
     PrintBoard();
     ReadInput();
 
-    //return 0; redundant when we have an endless while loop.
+    return 0;
 }
 
 void PrintBoard() {
@@ -128,7 +130,6 @@ void Move(char move[]) {
                 }
                 break;
             case N:
-                printf("white knight.\n");
                 if (KnightRules(moveTo, moveFrom) == 1) {
                     ValidMoveMade(moveTo, moveFrom);
                 }
@@ -138,7 +139,14 @@ void Move(char move[]) {
                 }
                 break;
             case B:
-                printf("white bishop.\n");
+                /*if (BishopRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }*/
+                printf("come on.\n");
                 break;
             case Q:
                 printf("white queen.\n");
@@ -186,7 +194,13 @@ void Move(char move[]) {
                 }
                 break;
             case b:
-                printf("black bishop.\n");
+                if (BishopRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             case q:
                 printf("black queen.\n");
@@ -213,10 +227,9 @@ void Move(char move[]) {
 }
 
 int PawnRules(int moveTo, int moveFrom) {
-    // White to move.
-    int validSquares[4] = {F, F, F, F};
-
-    if (halfMoves % 2 == 0) {
+    int validSquares[5] = {F, F, F, F, F};
+    // White to move.. (WHITE is equal to 0, check enum in Definitions.h)
+    if (halfMoves % 2 == WHITE) {
         // Checking if we can advance the pawn one step.
         if (board[moveFrom - 10] == E) {
             validSquares[0] = moveFrom - 10;
@@ -251,15 +264,11 @@ int PawnRules(int moveTo, int moveFrom) {
             validSquares[3] = moveFrom + 9;
         }
     }
-
-    printf("Valid moves: ");
     for (int i = 0; i < 4; ++i) {
-        printf("%d, ", validSquares[i]);
         if (moveTo == validSquares[i]) {
             return 1;
         }
     }
-    printf("\n");
     return 0;
 }
 
@@ -375,6 +384,73 @@ int RookRules(int moveTo, int moveFrom) {
 
     for (int j = 0; j < 14; ++j) {
         if (validSquares[j] == moveTo) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+int BishopRules(int moveTo, int moveFrom) {
+    printf("1");
+    int validMoves[13] = {F, F, F, F, F, F, F, F, F, F, F, F, F,};
+    int i = 1;
+    int k = 0;
+
+    // Diagonal up right.
+    while(board[moveFrom - (i*11)] != F || SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves%2) == 0) {
+        printf("2");
+        if(board[moveFrom - (i*11)] == E) {
+            validMoves[k] = moveFrom - (i*11);
+        }
+        else if(SquareOccupiedByOppositeColorPiece(moveFrom - (i*11), halfMoves%2)){
+            validMoves[k] = moveFrom - (i*11);
+            break;
+        }
+        i++;
+    }
+
+    // Diagonal down right.
+    i=1;
+    printf("3");
+    while(board[moveFrom + (i*11)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*11), halfMoves%2) == 0) {
+        if(board[moveFrom + (i*11)] == E) {
+            validMoves[k] = moveFrom + (i*11);
+        }
+        else if(SquareOccupiedByOppositeColorPiece(moveFrom + (i*11), halfMoves%2)){
+            validMoves[k] = moveFrom + (i*11);
+            break;
+        }
+        i++;
+    }
+
+    // Diagonal down left.
+    i=1;
+    while(board[moveFrom + (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom + (i*9), halfMoves%2) == 0) {
+        if(board[moveFrom + (i*9)] == E) {
+            validMoves[k] = moveFrom + (i*9);
+        }
+        else if(SquareOccupiedByOppositeColorPiece(moveFrom + (i*9), halfMoves%2)){
+            validMoves[k] = moveFrom + (i*9);
+            break;
+        }
+        i++;
+    }
+
+    // Diagonal up left.
+    i=1;
+    while(board[moveFrom - (i*9)] != F || SquareOccupiedByOppositeColorPiece(moveFrom - (i*9), halfMoves%2) == 0) {
+        if(board[moveFrom - (i*9)] == E) {
+            validMoves[k] = moveFrom - (i*9);
+        }
+        else if(SquareOccupiedByOppositeColorPiece(moveFrom - (i*9), halfMoves%2)){
+            validMoves[k] = moveFrom - (i*9);
+            break;
+        }
+        i++;
+    }
+
+    for (int j = 0; j < 13; ++j) {
+        if(validMoves[j] == moveTo) {
             return 1;
         }
     }
