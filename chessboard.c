@@ -520,20 +520,17 @@ int KingRules(int moveTo, int moveFrom) {
         k++;
     }
     // Is whites king on it's home scare and can he castle kingside or queenside?
-    if (moveFrom == 95 && whiteKingsideCastle == 1 && board[96] == E && board[97] == E) {
-        printf("White kingside castling is available.\n");
+    if (moveFrom == 95 && whiteKingsideCastle == 1 && board[96] == E && board[97] == E && moveTo == 97) {
         Castle(WKC);
-    } else if (moveFrom == 25 && blackKingsideCastle == 1 && board[26] == E && board[27] == E) {
-        printf("Black can castle kingside.\n");
+    } else if (moveFrom == 25 && blackKingsideCastle == 1 && board[26] == E && board[27] == E && moveTo == 27) {
         Castle(BKC);
     }
-    if (moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E) {
-        printf("White queenside castling is available.\n");
+    if (moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E && moveTo == 93) {
         Castle(WQC);
-    } else if (moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E) {
-        printf("Black can castle queenside.\n");
+    } else if (moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E && moveTo == 23) {
         Castle(BQC);
     }
+
 
     for (int i = 0; i < k; ++i) {
         if (validMoves[i] == moveTo) {
@@ -591,6 +588,17 @@ void Castle(int castle) {
         board[24] = r;
         board[23] = k;
     }
+
+    // disable future castling availability
+    if(halfMoves%2 == 0) {
+        whiteQueensideCastle = 0;
+        whiteKingsideCastle = 0;
+    }
+    else {
+        blackKingsideCastle = 0;
+        blackQueensideCastle = 0;
+    }
+
     halfMoves++;
     PrintBoard();
     ReadInput();
