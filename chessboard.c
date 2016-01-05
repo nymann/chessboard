@@ -5,6 +5,8 @@ void PrintBoard();
 
 int KnightRules(int moveFrom, int moveTo);
 
+int PawnRules(int moveTo, int moveFrom);
+
 void ReadInput();
 
 void ValidMoveMade(int moveFrom, int moveTo);
