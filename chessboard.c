@@ -264,16 +264,25 @@ int PawnRules(int moveTo, int moveFrom) {
             // We know that we can move the pawn forward one step, let's check if, it's on it's beginning square and if it can move two steps forward.
             if (board[moveFrom - 20] == E && moveFrom / 7) {
                 validSquares[1] = moveFrom - 20;
+                if(moveTo == moveFrom - 20) {
+                    enPassantSquare = moveFrom - 20;
+                    halfMovesSinceEnPassantSquare = 0;
+                }
             }
         }
-        if (board[moveFrom - 11] != F) {
+        if (SquareOccupiedByOppositeColorPiece(moveFrom - 11, WHITE) == 1) {
             validSquares[2] = moveFrom - 11;
         }
-        if (board[moveFrom - 9] != F) {
+        if (SquareOccupiedByOppositeColorPiece(moveFrom - 9, WHITE) == 1) {
             validSquares[3] = moveFrom - 9;
         }
 
-        //TODO(Implement En Passant)
+        if(moveFrom - 11 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
+            printf("En Passant, go.\n");
+        } else if(moveFrom - 9 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
+            printf("En Passant, go.\n");
+        }
+
         //TODO(Implement Promotion)
     }
         // Black to move.
@@ -282,14 +291,25 @@ int PawnRules(int moveTo, int moveFrom) {
             validSquares[0] = moveFrom + 10;
             // We know that we can move the pawn forward one step, let's check if, it's on it's beginning square and if it can move two steps forward.
             if (board[moveFrom + 20] == E && moveFrom / 7) {
+                if(moveTo == moveFrom + 20) {
+                    enPassantSquare = moveFrom + 20;
+                    halfMovesSinceEnPassantSquare = 0;
+                }
                 validSquares[1] = moveFrom + 20;
+                halfMovesSinceEnPassantSquare = 0;
             }
         }
-        if (board[moveFrom + 11] != F) {
+        if (SquareOccupiedByOppositeColorPiece(moveFrom + 11, BLACK) == 1) {
             validSquares[2] = moveFrom + 11;
         }
-        if (board[moveFrom + 9] != F) {
+        if (SquareOccupiedByOppositeColorPiece(moveFrom + 9, BLACK) == 1) {
             validSquares[3] = moveFrom + 9;
+        }
+
+        if(moveFrom + 11 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
+            printf("En Passant, go.\n");
+        } else if(moveFrom + 9 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
+            printf("En Passant, go.\n");
         }
     }
     for (int i = 0; i < 4; ++i) {
