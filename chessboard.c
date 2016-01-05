@@ -100,6 +100,7 @@ void ReadInput() {
     // Checking if the input is within the restricted files (a-h) and ranks 1-8.
     if (((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') &&
         ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
+        halfMovesSinceEnPassantSquare++;
         Move(move);
     }
     else {
@@ -265,7 +266,7 @@ int PawnRules(int moveTo, int moveFrom) {
             if (board[moveFrom - 20] == E && moveFrom / 7) {
                 validSquares[1] = moveFrom - 20;
                 if(moveTo == moveFrom - 20) {
-                    enPassantSquare = moveFrom - 20;
+                    enPassantSquare = moveFrom - 20 + 10;
                     halfMovesSinceEnPassantSquare = 0;
                 }
             }
@@ -277,10 +278,8 @@ int PawnRules(int moveTo, int moveFrom) {
             validSquares[3] = moveFrom - 9;
         }
 
-        if(moveFrom - 11 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
-            printf("En Passant, go.\n");
-        } else if(moveFrom - 9 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
-            printf("En Passant, go.\n");
+        if((moveFrom - 11 == enPassantSquare || moveFrom - 9 == enPassantSquare) && halfMovesSinceEnPassantSquare <= 1) {
+            EnPassant(moveTo, moveFrom, WHITE);
         }
 
         //TODO(Implement Promotion)
@@ -292,7 +291,7 @@ int PawnRules(int moveTo, int moveFrom) {
             // We know that we can move the pawn forward one step, let's check if, it's on it's beginning square and if it can move two steps forward.
             if (board[moveFrom + 20] == E && moveFrom / 7) {
                 if(moveTo == moveFrom + 20) {
-                    enPassantSquare = moveFrom + 20;
+                    enPassantSquare = moveFrom + 20 - 10;
                     halfMovesSinceEnPassantSquare = 0;
                 }
                 validSquares[1] = moveFrom + 20;
@@ -306,10 +305,8 @@ int PawnRules(int moveTo, int moveFrom) {
             validSquares[3] = moveFrom + 9;
         }
 
-        if(moveFrom + 11 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
-            printf("En Passant, go.\n");
-        } else if(moveFrom + 9 == enPassantSquare && halfMovesSinceEnPassantSquare <= 1) {
-            printf("En Passant, go.\n");
+        if((moveFrom + 11 == enPassantSquare || moveFrom + 9 == enPassantSquare) && halfMovesSinceEnPassantSquare <= 1) {
+            EnPassant(moveTo, moveFrom, BLACK);
         }
     }
     for (int i = 0; i < 4; ++i) {
@@ -439,8 +436,6 @@ int RookRules(int moveTo, int moveFrom) {
 }
 
 int BishopRules(int moveTo, int moveFrom) {
-    printf("moveFrom = %d.\n", moveFrom);
-    printf("moveTo = %d.\n", moveTo);
     int validMoves[13] = {F, F, F, F, F, F, F, F, F, F, F, F, F,};
     int i = 1;
     int k = 0;
@@ -628,6 +623,21 @@ void Castle(int castle) {
     else {
         blackKingsideCastle = 0;
         blackQueensideCastle = 0;
+    }
+
+    halfMoves++;
+    PrintBoard();
+    ReadInput();
+}
+
+void EnPassant(int moveTo, int moveFrom, int color) {
+    board[moveTo] = board[moveFrom];
+    board[moveFrom] = E;
+    if(color == WHITE) {
+        board[moveTo + 10] = E;
+    }
+    else {
+        board[moveTo - 10] = E;
     }
 
     halfMoves++;
