@@ -7,6 +7,8 @@ int KnightRules(int moveFrom, int moveTo);
 
 int PawnRules(int moveTo, int moveFrom);
 
+int RookRules(int moveTo, int moveFrom);
+
 void ReadInput();
 
 void ValidMoveMade(int moveFrom, int moveTo);
@@ -114,7 +116,13 @@ void Move(char move[]) {
                 }
                 break;
             case R:
-                printf("white rook.\n");
+                if (RookRules(moveTo, moveFrom) == 1) {
+                    ValidMoveMade(moveTo, moveFrom);
+                }
+                else {
+                    printf("Invalid move.\n");
+                    ReadInput();
+                }
                 break;
             case N:
                 printf("white knight.\n");
@@ -208,10 +216,10 @@ int PawnRules(int moveTo, int moveFrom) {
                 validSquares[1] = moveFrom - 20;
             }
         }
-        if(board[moveFrom - 11] != F) {
+        if (board[moveFrom - 11] != F) {
             validSquares[2] = moveFrom - 11;
         }
-        if(board[moveFrom - 9] != F) {
+        if (board[moveFrom - 9] != F) {
             validSquares[3] = moveFrom - 9;
         }
 
@@ -227,10 +235,10 @@ int PawnRules(int moveTo, int moveFrom) {
                 validSquares[1] = moveFrom + 20;
             }
         }
-        if(board[moveFrom + 11] != F) {
+        if (board[moveFrom + 11] != F) {
             validSquares[2] = moveFrom + 11;
         }
-        if(board[moveFrom + 9] != F) {
+        if (board[moveFrom + 9] != F) {
             validSquares[3] = moveFrom + 9;
         }
     }
@@ -282,6 +290,26 @@ int KnightRules(int moveTo, int moveFrom) {
     return 0;
 }
 
+int RookRules(int moveTo, int moveFrom) {
+    int validSquares[14] = {F, F, F, F, F, F, F, F, F, F, F, F, F, F};
+
+    // Vertical moves negative direction. (fx. from the 1st rank to 8th rank).
+    int i = 1;
+    if (halfMoves % 2 == WHITE) {
+        printf("Hello from RookRules WHITE.\nboard[moveFrom - (10 * i)] = %d", board[moveFrom - (10 * i)]);
+
+        while (board[moveFrom - (10 * i)] == E || (board[moveFrom - (10 * i)] >= p && board[moveFrom - (10 * i)] <= k)) {
+            validSquares[i] = moveFrom - (10 * i);
+        }
+    }
+    for (int j = 0; j < 14; ++j) {
+        printf("%d, ", validSquares[i]);
+        if (moveTo == validSquares[i]) {
+            return 1;
+        }
+    }
+    return 0;
+}
 
 void ValidMoveMade(int moveTo, int moveFrom) {
     board[moveTo] = board[moveFrom];
@@ -292,10 +320,10 @@ void ValidMoveMade(int moveTo, int moveFrom) {
 }
 
 int SquareOccupiedByOppositeColorPiece(int moveTo, int color) {
-    if(color == BLACK && board[moveTo] <= K && board[moveTo] >= P) {
+    if (color == BLACK && board[moveTo] <= K && board[moveTo] >= P) {
         return 1;
     }
-    else if(color == WHITE && board[moveTo] <= k && board[moveTo] >= p) {
+    else if (color == WHITE && board[moveTo] <= k && board[moveTo] >= p) {
         return 1;
     }
 
