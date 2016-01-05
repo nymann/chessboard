@@ -2,9 +2,13 @@
 #include "Definitions.h"
 
 void PrintBoard();
+
 int KnightRules(int moveFrom, int moveTo);
+
 void ReadInput();
+
 void ValidMoveMade(int moveFrom, int moveTo);
+
 void Move(char move[]);
 
 int main() {
@@ -89,6 +93,7 @@ void ReadInput() {
         printf("move is not valid, moves should be on the form: 'e2e4'.\n");
     }
 }
+int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 
 void Move(char move[]) {
     int moveFrom = 100 - (move[1] - '0') * 10 + (move[0] - 96);
@@ -106,7 +111,7 @@ void Move(char move[]) {
                 break;
             case N:
                 printf("white knight.\n");
-                if(KnightRules(moveTo, moveFrom) == 1) {
+                if (KnightRules(moveTo, moveFrom) == 1) {
                     ValidMoveMade(moveTo, moveFrom);
                 }
                 else {
@@ -144,7 +149,7 @@ void Move(char move[]) {
                 break;
             case n:
                 printf("black knight.\n");
-                if(KnightRules(moveTo, moveFrom) == 1) {
+                if (KnightRules(moveTo, moveFrom) == 1) {
                     ValidMoveMade(moveTo, moveFrom);
                 }
                 break;
@@ -175,45 +180,81 @@ void Move(char move[]) {
     }
 }
 
+int PawnRules(int moveTo, int moveFrom) {
+    // White to move.
+    int validSquares[4] = {F, F, F, F};
+
+    if (halfMoves % 2 == 0) {
+        // Checking if we can advance the pawn one step.
+        if (board[moveFrom - 10] == E) {
+            validSquares[0] = moveFrom - 10;
+            // We know that we can move the pawn forward one step, let's check if, it's on it's beginning square and if it can move two steps forward.
+            if (board[moveFrom - 20] == E && moveFrom / 7) {
+                validSquares[1] = moveFrom - 20;
+            }
+        }
+
+
+
+
+    }
+        // Black to move.
+    else {
+
+    }
+}
+
 int KnightRules(int moveTo, int moveFrom) {
     // Since we already checked if the moveTo square is blocked by our own piece, we don't have to consider it here.
     int validSquares[8] = {F, F, F, F, F, F, F, F};
-    if(board[moveFrom + 21] != F) {
+    if (board[moveFrom + 21] != F) {
         validSquares[0] = moveFrom + 21;
     }
-    if(board[moveFrom - 21] != F) {
+    if (board[moveFrom - 21] != F) {
         validSquares[1] = moveFrom - 21;
     }
-    if(board[moveFrom + 19] != F) {
+    if (board[moveFrom + 19] != F) {
         validSquares[2] = moveFrom + 19;
     }
-    if(board[moveFrom - 19] != F) {
+    if (board[moveFrom - 19] != F) {
         validSquares[3] = moveFrom - 19;
     }
-    if(board[moveFrom + 12] != F) {
+    if (board[moveFrom + 12] != F) {
         validSquares[4] = moveFrom + 12;
     }
-    if(board[moveFrom - 12] != F) {
+    if (board[moveFrom - 12] != F) {
         validSquares[5] = moveFrom - 12;
     }
-    if(board[moveFrom + 8] != F) {
+    if (board[moveFrom + 8] != F) {
         validSquares[6] = moveFrom + 8;
     }
-    if(board[moveFrom - 8] != F) {
+    if (board[moveFrom - 8] != F) {
         validSquares[7] = moveFrom - 8;
     }
 
     for (int i = 0; i < 8; ++i) {
-        if(moveTo == validSquares[i]) {
+        if (moveTo == validSquares[i]) {
             return 1;
         }
     }
     return 0;
 }
 
+
 void ValidMoveMade(int moveTo, int moveFrom) {
     board[moveTo] = board[moveFrom];
     board[moveFrom] = E;
     halfMoves++;
     PrintBoard();
+}
+
+int SquareOccupiedByOppositeColorPiece(int moveTo, int color) {
+    if(color == BLACK && board[moveTo] <= K && board[moveTo] >= P) {
+        return 1;
+    }
+    else if(color == WHITE && board[moveTo] <= k && board[moveTo] >= p) {
+        return 1;
+    }
+
+    return 0;
 }
