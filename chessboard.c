@@ -17,6 +17,8 @@ int QueenRules(int moveTo, int moveFrom);
 
 void Castle(int castle);
 
+void EnPassant(int moveTo, int moveFrom, int color);
+
 void ReadInput();
 
 void ValidMoveMade(int moveFrom, int moveTo);
