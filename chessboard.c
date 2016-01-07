@@ -35,57 +35,60 @@ int main() {
 }
 
 void PrintBoard() {
-    for (int i = 0; i < 12; i++) {
+    printf("    a   b   c   d   e   f   g   h\n");
+    for (int i = 2; i < 10; i++) {
+        printf("  +---+---+---+---+---+---+---+---+\n");
+        printf("%d |", 10-i);
         for (int j = 0; j < 10; j++) {
-            switch (board[i * 10 + j]) {
+            switch (board[(i) * 10 + j]) {
                 case 0:
-                    printf(". ");
+                    printf("   |");
                     break;
                 case 1:
-                    printf("P ");
+                    printf(" P |");
                     break;
 
                 case 2:
-                    printf("R ");
+                    printf(" R |");
                     break;
 
                 case 3:
-                    printf("N ");
+                    printf(" N |");
                     break;
 
                 case 4:
-                    printf("B ");
+                    printf(" B |");
                     break;
 
                 case 5:
-                    printf("Q ");
+                    printf(" Q |");
                     break;
 
                 case 6:
-                    printf("K ");
+                    printf(" K |");
                     break;
                 case 7:
-                    printf("p ");
+                    printf(" p |");
                     break;
 
                 case 8:
-                    printf("r ");
+                    printf(" r |");
                     break;
 
                 case 9:
-                    printf("n ");
+                    printf(" n |");
                     break;
 
                 case 10:
-                    printf("b ");
+                    printf(" b |");
                     break;
 
                 case 11:
-                    printf("q ");
+                    printf(" q |");
                     break;
 
                 case 12:
-                    printf("k ");
+                    printf(" k |");
                     break;
                 default:
                     break;
@@ -93,6 +96,7 @@ void PrintBoard() {
         }
         printf("\n");
     }
+    printf("  +---+---+---+---+---+---+---+---+\n\n");
 }
 
 void ReadInput() {
@@ -267,7 +271,7 @@ int PawnRules(int moveTo, int moveFrom) {
             // We know that we can move the pawn forward one step, let's check if, it's on it's beginning square and if it can move two steps forward.
             if (board[moveFrom - 20] == E && moveFrom / 7) {
                 validSquares[1] = moveFrom - 20;
-                if(moveTo == moveFrom - 20) {
+                if (moveTo == moveFrom - 20) {
                     enPassantSquare = moveFrom - 20 + 10;
                     halfMovesSinceEnPassantSquare = 0;
                 }
@@ -280,7 +284,8 @@ int PawnRules(int moveTo, int moveFrom) {
             validSquares[3] = moveFrom - 9;
         }
 
-        if((moveFrom - 11 == enPassantSquare || moveFrom - 9 == enPassantSquare) && halfMovesSinceEnPassantSquare <= 1) {
+        if ((moveFrom - 11 == enPassantSquare || moveFrom - 9 == enPassantSquare) &&
+            halfMovesSinceEnPassantSquare <= 1) {
             EnPassant(moveTo, moveFrom, WHITE);
         }
 
@@ -292,7 +297,7 @@ int PawnRules(int moveTo, int moveFrom) {
             validSquares[0] = moveFrom + 10;
             // We know that we can move the pawn forward one step, let's check if, it's on it's beginning square and if it can move two steps forward.
             if (board[moveFrom + 20] == E && moveFrom / 7) {
-                if(moveTo == moveFrom + 20) {
+                if (moveTo == moveFrom + 20) {
                     enPassantSquare = moveFrom + 20 - 10;
                     halfMovesSinceEnPassantSquare = 0;
                 }
@@ -307,12 +312,18 @@ int PawnRules(int moveTo, int moveFrom) {
             validSquares[3] = moveFrom + 9;
         }
 
-        if((moveFrom + 11 == enPassantSquare || moveFrom + 9 == enPassantSquare) && halfMovesSinceEnPassantSquare <= 1) {
+        if ((moveFrom + 11 == enPassantSquare || moveFrom + 9 == enPassantSquare) &&
+            halfMovesSinceEnPassantSquare <= 1) {
             EnPassant(moveTo, moveFrom, BLACK);
         }
     }
+
     for (int i = 0; i < 4; ++i) {
         if (moveTo == validSquares[i]) {
+            // Promotion
+            if(moveTo / 10 == 2 || moveTo / 10 == 9) {
+                promotion = 1;
+            }
             return 1;
         }
     }
@@ -419,11 +430,11 @@ int RookRules(int moveTo, int moveFrom) {
     }
 
     // Check if we should disable a castling opportunity due to rock being moved from it's start squares.
-    if(moveFrom == 98) {
+    if (moveFrom == 98) {
         whiteKingsideCastle = 0;
-    } else if(moveFrom == 91) {
+    } else if (moveFrom == 91) {
         whiteQueensideCastle = 0;
-    } else if(moveFrom == 28) {
+    } else if (moveFrom == 28) {
         blackKingsideCastle = 0;
     } else if (moveFrom == 21) {
         blackQueensideCastle = 0;
@@ -553,9 +564,11 @@ int KingRules(int moveTo, int moveFrom) {
     } else if (moveFrom == 25 && blackKingsideCastle == 1 && board[26] == E && board[27] == E && moveTo == 27) {
         Castle(BKC);
     }
-    if (moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E && moveTo == 93) {
+    if (moveFrom == 95 && whiteQueensideCastle == 1 && board[94] == E && board[93] == E && board[92] == E &&
+        moveTo == 93) {
         Castle(WQC);
-    } else if (moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E && moveTo == 23) {
+    } else if (moveFrom == 25 && blackQueensideCastle == 1 && board[24] == E && board[23] == E && board[22] == E &&
+               moveTo == 23) {
         Castle(BQC);
     }
 
@@ -595,17 +608,17 @@ int SquareOccupiedByOppositeColorPiece(int moveTo, int color) {
 }
 
 void Castle(int castle) {
-    if(castle == WKC) {
+    if (castle == WKC) {
         board[97] = K;
         board[95] = E;
         board[96] = R;
         board[98] = E;
-    } else if(castle == WQC) {
+    } else if (castle == WQC) {
         board[91] = E;
         board[94] = R;
         board[93] = K;
         board[95] = E;
-    } else if(castle == BKC) {
+    } else if (castle == BKC) {
         board[25] = E;
         board[28] = E;
         board[26] = r;
@@ -618,7 +631,7 @@ void Castle(int castle) {
     }
 
     // disable future castling availability
-    if(halfMoves%2 == 0) {
+    if (halfMoves % 2 == 0) {
         whiteQueensideCastle = 0;
         whiteKingsideCastle = 0;
     }
@@ -635,7 +648,7 @@ void Castle(int castle) {
 void EnPassant(int moveTo, int moveFrom, int color) {
     board[moveTo] = board[moveFrom];
     board[moveFrom] = E;
-    if(color == WHITE) {
+    if (color == WHITE) {
         board[moveTo + 10] = E;
     }
     else {
@@ -645,4 +658,8 @@ void EnPassant(int moveTo, int moveFrom, int color) {
     halfMoves++;
     PrintBoard();
     ReadInput();
+}
+
+void Promotion(int moveTo) {
+
 }
