@@ -44,53 +44,53 @@ void PrintBoard() {
         printf("%d |", 10-i);
         for (int j = 0; j < 10; j++) {
             switch (board[(i) * 10 + j]) {
-                case 0:
+                case E:
                     printf("   |");
                     break;
-                case 1:
+                case P:
                     printf(" P |");
                     break;
 
-                case 2:
+                case R:
                     printf(" R |");
                     break;
 
-                case 3:
+                case N:
                     printf(" N |");
                     break;
 
-                case 4:
+                case B:
                     printf(" B |");
                     break;
 
-                case 5:
+                case Q:
                     printf(" Q |");
                     break;
 
-                case 6:
+                case K:
                     printf(" K |");
                     break;
-                case 7:
+                case p:
                     printf(" p |");
                     break;
 
-                case 8:
+                case r:
                     printf(" r |");
                     break;
 
-                case 9:
+                case n:
                     printf(" n |");
                     break;
 
-                case 10:
+                case b:
                     printf(" b |");
                     break;
 
-                case 11:
+                case q:
                     printf(" q |");
                     break;
 
-                case 12:
+                case k:
                     printf(" k |");
                     break;
                 default:
@@ -666,8 +666,7 @@ void EnPassant(int moveTo, int moveFrom, int color) {
 void Promotion(int moveTo, int moveFrom, int color) {
     printf("What piece do you want?\n");
     char wantedPiece[4];
-    scanf(" %c", &wantedPiece);
-    printf("dafuq\n");
+    scanf(" %c", &wantedPiece); // note the space between " %c, it's vital.. since otherwise it won't wait for user input.
     board[moveFrom] = E;
     wantedPiece[0] = toupper(wantedPiece[0]);
     switch (wantedPiece[0]) {
