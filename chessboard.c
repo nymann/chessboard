@@ -698,6 +698,9 @@ void Promotion(int moveTo, int moveFrom, int color) {
                 board[moveTo] = n;
             }
             break;
+        default:
+            Promotion(moveTo, moveFrom, color);
+            break;
     }
 
     halfMoves++;
