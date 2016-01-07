@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <ctype.h>
 #include "Definitions.h"
 
 void PrintBoard();
@@ -18,6 +19,8 @@ int QueenRules(int moveTo, int moveFrom);
 void Castle(int castle);
 
 void EnPassant(int moveTo, int moveFrom, int color);
+
+void Promotion(int moveTo, int moveFrom, int color);
 
 void ReadInput();
 
@@ -322,7 +325,7 @@ int PawnRules(int moveTo, int moveFrom) {
         if (moveTo == validSquares[i]) {
             // Promotion
             if(moveTo / 10 == 2 || moveTo / 10 == 9) {
-                promotion = 1;
+                Promotion(moveTo, moveFrom, halfMoves%2);
             }
             return 1;
         }
@@ -660,6 +663,45 @@ void EnPassant(int moveTo, int moveFrom, int color) {
     ReadInput();
 }
 
-void Promotion(int moveTo) {
+void Promotion(int moveTo, int moveFrom, int color) {
+    printf("What piece do you want?\n");
+    char wantedPiece[4];
+    scanf(" %c", &wantedPiece);
+    printf("dafuq\n");
+    board[moveFrom] = E;
+    wantedPiece[0] = toupper(wantedPiece[0]);
+    switch (wantedPiece[0]) {
+        case 'Q':
+            if(color == WHITE) {
+                board[moveTo] = Q;
+            } else {
+                board[moveTo] = q;
+            }
+            break;
+        case 'R':
+            if(color == WHITE) {
+                board[moveTo] = R;
+            } else {
+                board[moveTo] = r;
+            }
+            break;
+        case 'B':
+            if(color == WHITE) {
+                board[moveTo] = B;
+            } else {
+                board[moveTo] = b;
+            }
+            break;
+        case 'N':
+            if(color == WHITE) {
+                board[moveTo] = N;
+            } else {
+                board[moveTo] = n;
+            }
+            break;
+    }
 
+    halfMoves++;
+    PrintBoard();
+    ReadInput();
 }

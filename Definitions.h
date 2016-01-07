@@ -71,7 +71,7 @@ enum { E, P, R, N, B, Q, K, p, r, n, b, q, k };
 enum {WHITE, BLACK};
 enum {WKC, WQC, BKC, BQC};
 
-extern int board[120] = {
+/*extern int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, r, n, b, q, k, b, n, r, F,
@@ -84,6 +84,21 @@ extern int board[120] = {
         F, R, N, B, Q, K, B, N, R, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
+};*/
+
+extern int board[120] = {
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, P, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, p, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F
 };
 
 extern int halfMoves = 0;
@@ -93,4 +108,3 @@ extern int blackKingsideCastle = 1;
 extern int blackQueensideCastle = 1;
 extern int enPassantSquare = 0;
 extern int halfMovesSinceEnPassantSquare = 0;
-extern int promotion = 0;
