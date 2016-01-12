@@ -67,44 +67,22 @@ be read here https://chessprogramming.wikispaces.com/10x12+Board.
 
 #define SQUARES 120
 #define F 99
-enum { E, P, R, N, B, Q, K, p, r, n, b, q, k };
-enum {WHITE, BLACK};
-enum {WKC, WQC, BKC, BQC};
-
-extern int board[120] = {
-        F, F, F, F, F, F, F, F, F, F,
-        F, F, F, F, F, F, F, F, F, F,
-        F, r, n, b, q, k, b, n, r, F,
-        F, p, p, p, p, p, p, p, p, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, P, P, P, P, P, P, P, P, F,
-        F, R, N, B, Q, K, B, N, R, F,
-        F, F, F, F, F, F, F, F, F, F,
-        F, F, F, F, F, F, F, F, F, F
+enum {
+    E, P, R, N, B, Q, K, p, r, n, b, q, k
+};
+enum {
+    WHITE, BLACK
+};
+enum {
+    WKC, WQC, BKC, BQC
 };
 
-/*extern int board[120] = {
-        F, F, F, F, F, F, F, F, F, F,
-        F, F, F, F, F, F, F, F, F, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, P, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, p, E, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, F, F, F, F, F, F, F, F, F,
-        F, F, F, F, F, F, F, F, F, F
-};*/
-
-extern int halfMoves = 0;
-extern int whiteQueensideCastle = 1;
-extern int whiteKingsideCastle = 1;
-extern int blackKingsideCastle = 1;
-extern int blackQueensideCastle = 1;
-extern int enPassantSquare = 0;
-extern int halfMovesSinceEnPassantSquare = 0;
+extern int board[];
+extern int halfMoves;
+extern int whiteQueensideCastle;
+extern int whiteKingsideCastle;
+extern int blackKingsideCastle;
+extern int blackQueensideCastle;
+extern int enPassantSquare;
+extern int halfMovesSinceEnPassantSquare;
+extern int kingSquares[];

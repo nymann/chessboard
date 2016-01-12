@@ -12,6 +12,8 @@ int RookRules(int moveTo, int moveFrom);
 
 int BishopRules(int moveTo, int moveFrom);
 
+int DoesKingExist(int moveTo);
+
 int KingRules(int moveTo, int moveFrom);
 
 int QueenRules(int moveTo, int moveFrom);
@@ -24,16 +26,41 @@ void Promotion(int moveTo, int moveFrom, int color);
 
 void ReadInput();
 
+int Check(int lastMoveTo);
+
 void ValidMoveMade(int moveFrom, int moveTo);
 
 void Move(char move[]);
 
 int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 
+int halfMoves = 0;
+int whiteQueensideCastle = 1;
+int whiteKingsideCastle = 1;
+int blackKingsideCastle = 1;
+int blackQueensideCastle = 1;
+int enPassantSquare = 0;
+int halfMovesSinceEnPassantSquare = 0;
+int kingSquares[] = {95, 25};
+int board[120] = {
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, r, n, b, q, k, b, n, r, F,
+        F, p, p, p, p, p, p, p, p, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, P, P, P, P, P, P, P, P, F,
+        F, R, N, B, Q, K, B, N, R, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F
+};
+
 int main() {
+
     PrintBoard();
     ReadInput();
-
     return 0;
 }
 
@@ -41,7 +68,7 @@ void PrintBoard() {
     printf("    a   b   c   d   e   f   g   h\n");
     for (int i = 2; i < 10; i++) {
         printf("  +---+---+---+---+---+---+---+---+\n");
-        printf("%d |", 10-i);
+        printf("%d |", 10 - i);
         for (int j = 0; j < 10; j++) {
             switch (board[(i) * 10 + j]) {
                 case E:
@@ -113,7 +140,9 @@ void ReadInput() {
         Move(move);
     }
     else {
-        printf("Invalid move.");
+        // print help (available commands).
+
+        printf("Invalid move.\n");
         ReadInput();
     }
 }
@@ -121,7 +150,6 @@ void ReadInput() {
 void Move(char move[]) {
     int moveFrom = 100 - (move[1] - '0') * 10 + (move[0] - 96);
     int moveTo = 100 - (move[3] - '0') * 10 + (move[2] - 96);
-
     // White to move?
     if (halfMoves % 2 == 0 && board[moveFrom] >= P && board[moveFrom] <= K &&
         (board[moveTo] == E || (board[moveTo] <= k && board[moveTo] >= p))) {
@@ -324,8 +352,8 @@ int PawnRules(int moveTo, int moveFrom) {
     for (int i = 0; i < 4; ++i) {
         if (moveTo == validSquares[i]) {
             // Promotion
-            if(moveTo / 10 == 2 || moveTo / 10 == 9) {
-                Promotion(moveTo, moveFrom, halfMoves%2);
+            if (moveTo / 10 == 2 || moveTo / 10 == 9) {
+                Promotion(moveTo, moveFrom, halfMoves % 2);
             }
             return 1;
         }
@@ -578,6 +606,8 @@ int KingRules(int moveTo, int moveFrom) {
 
     for (int i = 0; i < k; ++i) {
         if (validMoves[i] == moveTo) {
+            kingSquares[halfMoves % 2] = moveTo;
+            printf("king square. %d\n", kingSquares[halfMoves % 2]);
             return 1;
         }
     }
@@ -592,11 +622,17 @@ int QueenRules(int moveTo, int moveFrom) {
 }
 
 void ValidMoveMade(int moveTo, int moveFrom) {
-    board[moveTo] = board[moveFrom];
-    board[moveFrom] = E;
-    halfMoves++;
-    PrintBoard();
-    ReadInput();
+    if (DoesKingExist(moveTo) == 1) {
+        board[moveTo] = board[moveFrom];
+        board[moveFrom] = E;
+        Check(moveTo);
+        halfMoves++;
+        PrintBoard();
+        ReadInput();
+    }
+    else {
+        printf("Game is over!\n");
+    }
 }
 
 int SquareOccupiedByOppositeColorPiece(int moveTo, int color) {
@@ -616,21 +652,25 @@ void Castle(int castle) {
         board[95] = E;
         board[96] = R;
         board[98] = E;
+        kingSquares[0] = 97;
     } else if (castle == WQC) {
         board[91] = E;
         board[94] = R;
         board[93] = K;
         board[95] = E;
+        kingSquares[0] = 93;
     } else if (castle == BKC) {
         board[25] = E;
         board[28] = E;
         board[26] = r;
         board[27] = k;
+        kingSquares[1] = 27;
     } else {
         board[21] = E;
         board[25] = E;
         board[24] = r;
         board[23] = k;
+        kingSquares[1] = 23;
     }
 
     // disable future castling availability
@@ -666,33 +706,34 @@ void EnPassant(int moveTo, int moveFrom, int color) {
 void Promotion(int moveTo, int moveFrom, int color) {
     printf("What piece do you want?\n");
     char wantedPiece[4];
-    scanf(" %c", &wantedPiece); // note the space between " %c, it's vital.. since otherwise it won't wait for user input.
+    scanf(" %c",
+          &wantedPiece); // note the space between " %c, it's vital.. since otherwise it won't wait for user input.
     board[moveFrom] = E;
     wantedPiece[0] = toupper(wantedPiece[0]);
     switch (wantedPiece[0]) {
         case 'Q':
-            if(color == WHITE) {
+            if (color == WHITE) {
                 board[moveTo] = Q;
             } else {
                 board[moveTo] = q;
             }
             break;
         case 'R':
-            if(color == WHITE) {
+            if (color == WHITE) {
                 board[moveTo] = R;
             } else {
                 board[moveTo] = r;
             }
             break;
         case 'B':
-            if(color == WHITE) {
+            if (color == WHITE) {
                 board[moveTo] = B;
             } else {
                 board[moveTo] = b;
             }
             break;
         case 'N':
-            if(color == WHITE) {
+            if (color == WHITE) {
                 board[moveTo] = N;
             } else {
                 board[moveTo] = n;
@@ -707,3 +748,81 @@ void Promotion(int moveTo, int moveFrom, int color) {
     PrintBoard();
     ReadInput();
 }
+
+int DoesKingExist(int moveTo) {
+    if (board[kingSquares[WHITE]] == K || board[kingSquares[BLACK]] == k || board[moveTo] == K || board[moveTo] == k) {
+        return 1;
+    }
+    return 0;
+}
+
+int Check(int lastMoveTo) {
+    switch (board[lastMoveTo]) {
+        case P:
+            if (PawnRules(kingSquares[BLACK], lastMoveTo) == 1) {
+                printf("Check by the white pawn on XX.\n");
+                return 1;
+            }
+            break;
+        case R:
+            if (RookRules(kingSquares[BLACK], lastMoveTo) == 1) {
+                printf("Check by the white rook on XX.\n");
+                return 1;
+            }
+            break;
+        case N:
+            if (KnightRules(kingSquares[BLACK], lastMoveTo) == 1) {
+                printf("Check by the white knight on XX.\n");
+                return 1;
+            }
+            break;
+        case B:
+            if (BishopRules(kingSquares[BLACK], lastMoveTo) == 1) {
+                printf("Check by the white bishop on XX.\n");
+                return 1;
+            }
+            break;
+        case Q:
+            if (QueenRules(kingSquares[BLACK], lastMoveTo) == 1) {
+                printf("Check by the white queen on XX.\n");
+                return 1;
+            }
+            break;
+
+        case p:
+            if (PawnRules(kingSquares[WHITE], lastMoveTo) == 1) {
+                printf("Check by the black pawn on XX.\n");
+                return 1;
+            }
+            break;
+        case r:
+            if (RookRules(kingSquares[WHITE], lastMoveTo) == 1) {
+                printf("Check by the black rook on XX.\n");
+                return 1;
+            }
+            break;
+        case n:
+            if (KnightRules(kingSquares[WHITE], lastMoveTo) == 1) {
+                printf("Check by the black knight on XX.\n");
+                return 1;
+            }
+            break;
+        case b:
+            if (BishopRules(kingSquares[WHITE], lastMoveTo) == 1) {
+                printf("Check by the black bishop on XX.\n");
+                return 1;
+            }
+            break;
+        case q:
+            if (QueenRules(kingSquares[WHITE], lastMoveTo) == 1) {
+                printf("Check by the black queen on XX.\n");
+                return 1;
+            }
+            break;
+
+        default:
+            break;
+    }
+    return 0;
+}
+
