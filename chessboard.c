@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <stdlib.h>
 #include "Definitions.h"
 
 void PrintBoard();
@@ -29,6 +30,8 @@ void ReadInput();
 int Check(int lastMoveTo);
 
 void ValidMoveMade(int moveFrom, int moveTo);
+
+void ToAlgebraicNotation(int lastMoveTo);
 
 void Move(char move[]);
 
@@ -760,62 +763,72 @@ int Check(int lastMoveTo) {
     switch (board[lastMoveTo]) {
         case P:
             if (PawnRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white pawn on XX.\n");
+                printf("Check by the white pawn on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case R:
             if (RookRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white rook on XX.\n");
+                printf("Check by the white rook on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case N:
             if (KnightRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white knight on XX.\n");
+                printf("Check by the white knight on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case B:
             if (BishopRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white bishop on XX.\n");
+                printf("Check by the white bishop on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case Q:
             if (QueenRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white queen on XX.\n");
+                printf("Check by the white queen on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
 
         case p:
             if (PawnRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black pawn on XX.\n");
+                printf("Check by the black pawn on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case r:
             if (RookRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black rook on XX.\n");
+                printf("Check by the black rook on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case n:
             if (KnightRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black knight on XX.\n");
+                printf("Check by the black knight on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case b:
             if (BishopRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black bishop on XX.\n");
+                printf("Check by the black bishop on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
         case q:
             if (QueenRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black queen on XX.\n");
+                printf("Check by the black queen on ");
+                ToAlgebraicNotation(lastMoveTo);
                 return 1;
             }
             break;
@@ -826,3 +839,10 @@ int Check(int lastMoveTo) {
     return 0;
 }
 
+void ToAlgebraicNotation(int indexSquare) {
+    char algebraic[2];
+    int row = indexSquare / 10;
+    algebraic[0] = (char) (indexSquare % 10 + 96);
+    algebraic[1] = (char) (10 - row + 48);
+    printf("%c%c.\n", algebraic[0], algebraic[1]);
+}
