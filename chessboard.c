@@ -688,9 +688,6 @@ int Check(int moveTo, int moveFrom) {
             while (board[moveFrom - j] == E) {
                 j += 10;
             }
-            int r = RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j));
-            int t = SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2);
-            //printf("rulecaller called with moveTo = %d, moveFrom = %d... r = %d and t = %d\n", kingSquares[(halfMoves + 1) % 2], (moveFrom - j), r, t);
             if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
                  SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
                 printf("Check from ");
@@ -718,9 +715,6 @@ int Check(int moveTo, int moveFrom) {
             while (board[moveFrom - j] == E) {
                 j += 1;
             }
-            int r = RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j));
-            int t = SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2);
-            printf("rulecaller called with moveTo = %d, moveFrom = %d... r = %d and t = %d\n", kingSquares[(halfMoves + 1) % 2], (moveFrom - j), r, t);
             if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
                  SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
                 printf("Check from ");
@@ -741,7 +735,6 @@ void ToAlgebraicNotation(int indexSquare) {
 }
 
 int RuleCaller(int moveTo, int moveFrom, int switchCase) {
-    //printf("MOVEFROM = %d, MOVETO = %d, piece movefrom = %d, piece moveto = %d.\n", moveFrom, moveTo, board[moveFrom], board[moveTo]);
     switch (board[switchCase]) {
         case P:
             return PawnRules(moveTo, moveFrom);
