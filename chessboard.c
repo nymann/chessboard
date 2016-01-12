@@ -64,14 +64,14 @@ int kingSquares[] = {95, 25};
 int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
-        F, E, Q, N, E, k, E, E, E, F,
+        F, E, E, E, E, k, E, E, E, F,
         F, E, E, E, E, E, E, E, E, F,
         F, E, E, E, E, E, E, E, E, F,
-        F, E, N, E, E, E, E, E, E, F,
-        F, E, E, E, E, N, E, E, E, F,
-        F, E, E, E, E, Q, E, E, E, F,
+        F, b, E, E, E, E, E, E, E, F,
+        F, E, p, E, E, E, E, E, E, F,
         F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, E, E, K, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, K, E, E, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
 };
@@ -698,7 +698,6 @@ int Check(int moveTo, int moveFrom) {
     }
         // Horizontal
     else if (moveFromRow == kingSquareRow) {
-        printf("same rank!\n");
         if (moveFrom > kingSquares[(halfMoves + 1) % 2]) {
             int i = 1;
             while (board[moveFrom + i] == E) {
@@ -714,6 +713,62 @@ int Check(int moveTo, int moveFrom) {
             int j = 1;
             while (board[moveFrom - j] == E) {
                 j += 1;
+            }
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom - j);
+            }
+        }
+    }
+
+    // diagonal
+    int diagonalMoveFromDown = moveFrom % 9;
+    int diagonalKingSquareDown = (kingSquares[(halfMoves+1)%2]) % 9;
+    int diagonalMoveFromUp = moveFrom % 11;
+    int diagonalKingSquareUp = (kingSquares[(halfMoves+1)%2]) % 11;
+
+    if(diagonalMoveFromUp == diagonalKingSquareUp) {
+        printf("diagonal from up.\n");
+        if (moveFrom > kingSquares[(halfMoves + 1) % 2]) {
+            int i = 11;
+            while (board[moveFrom + i] == E) {
+                i += 11;
+            }
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom + i), (moveFrom + i)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom + i, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom + i);
+            }
+        }
+        else {
+            int j = 11;
+            while (board[moveFrom - j] == E) {
+                j += 11;
+            }
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom - j);
+            }
+        }
+    }
+    else if(diagonalMoveFromDown == diagonalKingSquareDown) {
+        if (moveFrom > kingSquares[(halfMoves + 1) % 2]) {
+            int i = 9;
+            while (board[moveFrom + i] == E) {
+                i += 9;
+            }
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom + i), (moveFrom + i)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom + i, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom + i);
+            }
+        }
+        else {
+            int j = 9;
+            while (board[moveFrom - j] == E) {
+                j += 9;
             }
             if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
                  SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
