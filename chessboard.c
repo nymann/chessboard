@@ -48,7 +48,7 @@ int blackQueensideCastle = 1;
 int enPassantSquare = 0;
 int halfMovesSinceEnPassantSquare = 0;
 int kingSquares[] = {95, 25};
-/*int board[120] = {
+int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, r, n, b, q, k, b, n, r, F,
@@ -61,9 +61,9 @@ int kingSquares[] = {95, 25};
         F, R, N, B, Q, K, B, N, R, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
-};*/
+};
 
-int board[120] = {
+/*int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, Q, E, E, N, k, E, E, E, F,
@@ -76,7 +76,7 @@ int board[120] = {
         F, E, b, E, E, E, K, b, E, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
-};
+};*/
 
 int main() {
 
@@ -663,8 +663,6 @@ int DoesKingExist(int moveTo) {
 }
 
 int Check(int moveTo, int moveFrom) {
-    printf("Turn = %d, moveTo = %d, moveFrom = %d, king square = %d.\n", halfMoves % 2, moveTo, moveFrom,
-           kingSquares[(halfMoves + 1) % 2]);
     if (RuleCaller(kingSquares[(halfMoves + 1) % 2], moveTo, moveTo) == 1) {
         printf("Check from ");
         ToAlgebraicNotation(moveTo);
