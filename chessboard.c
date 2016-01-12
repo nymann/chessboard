@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <ctype.h>
-#include <stdlib.h>
 #include "Definitions.h"
 
 void PrintBoard();
+
+int RuleCaller(int moveTo, int moveFrom, int switchCase);
 
 int KnightRules(int moveFrom, int moveTo);
 
@@ -27,11 +28,11 @@ void Promotion(int moveTo, int moveFrom, int color);
 
 void ReadInput();
 
-int Check(int lastMoveTo);
+int Check(int moveTo, int moveFrom);
 
-void ValidMoveMade(int moveFrom, int moveTo);
+void ValidMoveMade(int moveTo, int moveFrom);
 
-void ToAlgebraicNotation(int lastMoveTo);
+void ToAlgebraicNotation(int moveTo);
 
 void Move(char move[]);
 
@@ -45,7 +46,7 @@ int blackQueensideCastle = 1;
 int enPassantSquare = 0;
 int halfMovesSinceEnPassantSquare = 0;
 int kingSquares[] = {95, 25};
-int board[120] = {
+/*int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, r, n, b, q, k, b, n, r, F,
@@ -56,6 +57,21 @@ int board[120] = {
         F, E, E, E, E, E, E, E, E, F,
         F, P, P, P, P, P, P, P, P, F,
         F, R, N, B, Q, K, B, N, R, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F
+};*/
+
+int board[120] = {
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, E, Q, N, E, k, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, N, E, E, E, E, E, E, F,
+        F, E, E, E, E, N, E, E, E, F,
+        F, E, E, E, E, Q, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, K, E, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
 };
@@ -154,144 +170,29 @@ void Move(char move[]) {
     int moveFrom = 100 - (move[1] - '0') * 10 + (move[0] - 96);
     int moveTo = 100 - (move[3] - '0') * 10 + (move[2] - 96);
     // White to move?
-    if (halfMoves % 2 == 0 && board[moveFrom] >= P && board[moveFrom] <= K &&
+    if (halfMoves % 2 == WHITE && board[moveFrom] >= P && board[moveFrom] <= K &&
         (board[moveTo] == E || (board[moveTo] <= k && board[moveTo] >= p))) {
-        switch (board[moveFrom]) {
-            case P:
-                if (PawnRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case R:
-                if (RookRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case N:
-                if (KnightRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case B:
-                if (BishopRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case Q:
-                if (QueenRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case K:
-                if (KingRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-
-            default:
-                printf("try again.\n");
-                ReadInput();
-                break;
-        }
-    }
-
-        // Black to move?
-    else if (halfMoves % 2 == 1 && board[moveFrom] >= p && board[moveFrom] <= k &&
-             (board[moveTo] == E || (board[moveTo] <= K && board[moveTo] >= P))) {
-        switch (board[moveFrom]) {
-            case p:
-                if (PawnRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case r:
-                if (RookRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case n:
-                if (KnightRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case b:
-                if (BishopRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case q:
-                if (QueenRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            case k:
-                if (KingRules(moveTo, moveFrom) == 1) {
-                    ValidMoveMade(moveTo, moveFrom);
-                }
-                else {
-                    printf("Invalid move.\n");
-                    ReadInput();
-                }
-                break;
-            default:
-                printf("try again.\n");
-                ReadInput();
-                break;
-        }
-    }
-    else {
-        // The move from square is either empty or it's not your
-        if (halfMoves % 2 == 0) {
-            printf("It's whites turn to play and/or %c%c is empty.\n", move[0], move[1]);
+        if (RuleCaller(moveTo, moveFrom, moveFrom) == 1) {
+            ValidMoveMade(moveTo, moveFrom);
         }
         else {
-            printf("Invalid move\n");
+            printf("Invalid move.\n");
+            ReadInput();
         }
-        ReadInput();
+    }
+
+
+        // Black to move?
+    else if (halfMoves % 2 == BLACK && board[moveFrom] >= p && board[moveFrom] <= k &&
+             (board[moveTo] == E || (board[moveTo] <= K && board[moveTo] >= P))) {
+
+        if (RuleCaller(moveTo, moveFrom, moveFrom) == 1) {
+            ValidMoveMade(moveTo, moveFrom);
+        }
+        else {
+            printf("Invalid move.\n");
+            ReadInput();
+        }
     }
 }
 
@@ -628,7 +529,7 @@ void ValidMoveMade(int moveTo, int moveFrom) {
     if (DoesKingExist(moveTo) == 1) {
         board[moveTo] = board[moveFrom];
         board[moveFrom] = E;
-        Check(moveTo);
+        Check(moveTo, moveFrom);
         halfMoves++;
         PrintBoard();
         ReadInput();
@@ -759,83 +660,75 @@ int DoesKingExist(int moveTo) {
     return 0;
 }
 
-int Check(int lastMoveTo) {
-    switch (board[lastMoveTo]) {
-        case P:
-            if (PawnRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white pawn on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case R:
-            if (RookRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white rook on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case N:
-            if (KnightRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white knight on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case B:
-            if (BishopRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white bishop on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case Q:
-            if (QueenRules(kingSquares[BLACK], lastMoveTo) == 1) {
-                printf("Check by the white queen on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-
-        case p:
-            if (PawnRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black pawn on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case r:
-            if (RookRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black rook on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case n:
-            if (KnightRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black knight on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case b:
-            if (BishopRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black bishop on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-        case q:
-            if (QueenRules(kingSquares[WHITE], lastMoveTo) == 1) {
-                printf("Check by the black queen on ");
-                ToAlgebraicNotation(lastMoveTo);
-                return 1;
-            }
-            break;
-
-        default:
-            break;
+int Check(int moveTo, int moveFrom) {
+    printf("Turn = %d, moveTo = %d, moveFrom = %d, king square = %d.\n", halfMoves % 2, moveTo, moveFrom, kingSquares[(halfMoves + 1) % 2]);
+    if (RuleCaller(kingSquares[(halfMoves + 1) % 2], moveTo, moveTo) == 1) {
+        printf("Check from ");
+        ToAlgebraicNotation(moveTo);
     }
+    // Check for discover checks.
+    int moveFromRow = moveFrom / 10;
+    int kingSquareRow = kingSquares[(halfMoves + 1) % 2] / 10;
+
+    // Vertical.
+    if (moveFrom % 10 == kingSquares[(halfMoves + 1) % 2] % 10) {
+        if (moveFrom > kingSquares[(halfMoves + 1) % 2]) {
+            int i = 10;
+            while (board[moveFrom + i] == E) {
+                i += 10;
+            }
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom + i), (moveFrom + i)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom + i, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom + i);
+            }
+        }
+        else {
+            int j = 10;
+            while (board[moveFrom - j] == E) {
+                j += 10;
+            }
+            int r = RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j));
+            int t = SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2);
+            //printf("rulecaller called with moveTo = %d, moveFrom = %d... r = %d and t = %d\n", kingSquares[(halfMoves + 1) % 2], (moveFrom - j), r, t);
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom - j);
+            }
+        }
+
+    }
+        // Horizontal
+    else if (moveFromRow == kingSquareRow) {
+        printf("same rank!\n");
+        if (moveFrom > kingSquares[(halfMoves + 1) % 2]) {
+            int i = 1;
+            while (board[moveFrom + i] == E) {
+                i += 1;
+            }
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom + i), (moveFrom + i)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom + i, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom + i);
+            }
+        }
+        else {
+            int j = 1;
+            while (board[moveFrom - j] == E) {
+                j += 1;
+            }
+            int r = RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j));
+            int t = SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2);
+            printf("rulecaller called with moveTo = %d, moveFrom = %d... r = %d and t = %d\n", kingSquares[(halfMoves + 1) % 2], (moveFrom - j), r, t);
+            if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
+                 SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
+                printf("Check from ");
+                ToAlgebraicNotation(moveFrom - j);
+            }
+        }
+    }
+
     return 0;
 }
 
@@ -845,4 +738,36 @@ void ToAlgebraicNotation(int indexSquare) {
     algebraic[0] = (char) (indexSquare % 10 + 96);
     algebraic[1] = (char) (10 - row + 48);
     printf("%c%c.\n", algebraic[0], algebraic[1]);
+}
+
+int RuleCaller(int moveTo, int moveFrom, int switchCase) {
+    //printf("MOVEFROM = %d, MOVETO = %d, piece movefrom = %d, piece moveto = %d.\n", moveFrom, moveTo, board[moveFrom], board[moveTo]);
+    switch (board[switchCase]) {
+        case P:
+            return PawnRules(moveTo, moveFrom);
+        case N:
+            return KnightRules(moveTo, moveFrom);
+        case R:
+            return RookRules(moveTo, moveFrom);
+        case B:
+            return BishopRules(moveTo, moveFrom);
+        case Q:
+            return QueenRules(moveTo, moveFrom);
+        case K:
+            return KingRules(moveTo, moveFrom);
+        case p:
+            return PawnRules(moveTo, moveFrom);
+        case n:
+            return KnightRules(moveTo, moveFrom);
+        case r:
+            return RookRules(moveTo, moveFrom);
+        case b:
+            return BishopRules(moveTo, moveFrom);
+        case q:
+            return QueenRules(moveTo, moveFrom);
+        case k:
+            return KingRules(moveTo, moveFrom);
+        default:
+            return 0;
+    }
 }

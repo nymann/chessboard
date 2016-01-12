@@ -68,7 +68,7 @@ be read here https://chessprogramming.wikispaces.com/10x12+Board.
 #define SQUARES 120
 #define F 99
 enum {
-    E, P, R, N, B, Q, K, p, r, n, b, q, k
+    E, P, N, R, B, Q, K, p, n, r, b, q, k
 };
 enum {
     WHITE, BLACK
