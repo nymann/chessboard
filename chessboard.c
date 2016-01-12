@@ -48,7 +48,7 @@ int blackQueensideCastle = 1;
 int enPassantSquare = 0;
 int halfMovesSinceEnPassantSquare = 0;
 int kingSquares[] = {95, 25};
-/*int board[120] = {
+int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, r, n, b, q, k, b, n, r, F,
@@ -61,9 +61,9 @@ int kingSquares[] = {95, 25};
         F, R, N, B, Q, K, B, N, R, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
-};*/
+};
 
-int board[120] = {
+/*int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, Q, E, E, N, k, E, E, E, F,
@@ -76,7 +76,7 @@ int board[120] = {
         F, E, b, E, E, E, K, b, E, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
-};
+};*/
 
 int main() {
 
@@ -182,8 +182,6 @@ void Move(char move[]) {
             ReadInput();
         }
     }
-
-
         // Black to move?
     else if (halfMoves % 2 == BLACK && board[moveFrom] >= p && board[moveFrom] <= k &&
              (board[moveTo] == E || (board[moveTo] <= K && board[moveTo] >= P))) {
