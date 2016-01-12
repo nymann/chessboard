@@ -48,7 +48,7 @@ int blackQueensideCastle = 1;
 int enPassantSquare = 0;
 int halfMovesSinceEnPassantSquare = 0;
 int kingSquares[] = {95, 25};
-int board[120] = {
+/*int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, r, n, b, q, k, b, n, r, F,
@@ -61,9 +61,9 @@ int board[120] = {
         F, R, N, B, Q, K, B, N, R, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
-};
+};*/
 
-/*int board[120] = {
+int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F,
         F, Q, E, E, N, k, E, E, E, F,
@@ -76,7 +76,7 @@ int board[120] = {
         F, E, b, E, E, E, K, b, E, F,
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
-};*/
+};
 
 int main() {
 
@@ -258,7 +258,7 @@ int PawnRules(int moveTo, int moveFrom) {
     for (int i = 0; i < 4; ++i) {
         if (moveTo == validSquares[i]) {
             // Promotion
-            if (moveTo / 10 == 2 || moveTo / 10 == 9) {
+            if ((moveTo / 10) == 2 || (moveTo / 10) == 9) {
                 Promotion(moveTo, moveFrom, halfMoves % 2);
             }
             return 1;
@@ -513,7 +513,6 @@ int KingRules(int moveTo, int moveFrom) {
     for (int i = 0; i < k; ++i) {
         if (validMoves[i] == moveTo) {
             kingSquares[halfMoves % 2] = moveTo;
-            printf("king square. %d\n", kingSquares[halfMoves % 2]);
             return 1;
         }
     }
