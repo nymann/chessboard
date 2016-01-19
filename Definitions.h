@@ -67,6 +67,8 @@ be read here https://chessprogramming.wikispaces.com/10x12+Board.
 
 #define SQUARES 120
 #define F 99
+#define AI_MOVE 119
+#define NO_MOVES 1000
 enum {
     E, P, N, R, B, Q, K, p, n, r, b, q, k
 };

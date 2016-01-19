@@ -41,6 +41,8 @@ void ToAlgebraicNotation(int moveTo);
 
 void Move(char move[]);
 
+int SquareOccupiedByOwnColorPiece(int moveTo, int color);
+
 void DiscoverCheck(int number, int moveFrom);
 
 int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
@@ -107,6 +109,7 @@ int main(int argc, const char *argv[]) {
             playerVsComputer = 0;
         }
     } else {
+        playerVsComputer = 0;
         printf("No arguments registered.\nYou can start a new game by fx. typing 'chessboard 1 w',\n"
                        "which would start a new game against the computer where you are playing as white.\n"
                        "Since you didn't input any arguments, a multiplayer game has been selected.\n\n");
@@ -116,10 +119,12 @@ int main(int argc, const char *argv[]) {
     if(halfMoves % 2 == playerColor && playerVsComputer == 1) {
         ReadInput();
     }
-    else {
+    else if(playerVsComputer == 1){
         AI();
     }
-
+    else {
+        ReadInput();
+    }
     return 0;
 }
 
@@ -267,7 +272,7 @@ int PawnRules(int moveTo, int moveFrom) {
             EnPassant(moveTo, moveFrom, WHITE);
         }
 
-        //TODO(Implement Promotion)
+
     }
         // Black to move.
     else {
@@ -294,6 +299,22 @@ int PawnRules(int moveTo, int moveFrom) {
             halfMovesSinceEnPassantSquare <= 1) {
             EnPassant(moveTo, moveFrom, BLACK);
         }
+    }
+
+    if(moveTo == AI_MOVE) {
+        int l = 0;
+        if(validSquares[0] == F) {
+            return NO_MOVES;
+        }
+        while(1) {
+            if(validSquares[l] != F) {
+                l++;
+            }
+            else {
+                break;
+            }
+        }
+        return validSquares[(rand() % l)];
     }
 
     for (int i = 0; i < 4; ++i) {
@@ -336,6 +357,22 @@ int KnightRules(int moveTo, int moveFrom) {
         validSquares[7] = moveFrom - 8;
     }
 
+    if(moveTo == AI_MOVE) {
+        int l = 0;
+        if(validSquares[0] == F) {
+            return NO_MOVES;
+        }
+        while(1) {
+            if(validSquares[l] != F) {
+                l++;
+            }
+            else {
+                break;
+            }
+        }
+        return validSquares[(rand() % l)];
+    }
+
     for (int i = 0; i < 8; ++i) {
         if (moveTo == validSquares[i]) {
             return 1;
@@ -349,7 +386,7 @@ int RookRules(int moveTo, int moveFrom) {
     // Vertical moves negative direction. (fx. from the 1st rank to 8th rank).
     int k = 0;
     int i = 1;
-    while (board[moveFrom - (i * 10)] != F ||
+    while (board[moveFrom - (i * 10)] != F && SquareOccupiedByOwnColorPiece(moveFrom - (i * 10), halfMoves%2) == 0 ||
            SquareOccupiedByOppositeColorPiece(moveFrom - (i * 10), halfMoves % 2) != 0) {
         if (board[moveFrom - (i * 10)] == E) {
             validSquares[k] = moveFrom - (i * 10);
@@ -364,7 +401,7 @@ int RookRules(int moveTo, int moveFrom) {
     }
 
     i = 1;
-    while (board[moveFrom + (i * 10)] != F ||
+    while (board[moveFrom + (i * 10)] != F &&  SquareOccupiedByOwnColorPiece(moveFrom + (i * 10), halfMoves%2) == 0||
            SquareOccupiedByOppositeColorPiece(moveFrom + (i * 10), halfMoves % 2) != 0) {
         if (board[moveFrom + (i * 10)] == E) {
             validSquares[k] = moveFrom + (i * 10);
@@ -380,7 +417,7 @@ int RookRules(int moveTo, int moveFrom) {
 
     // Horizontal direction positive.
     i = 1;
-    while (board[moveFrom + i] != F || SquareOccupiedByOppositeColorPiece(moveFrom + i, halfMoves % 2) != 0) {
+    while (board[moveFrom + i] != F && SquareOccupiedByOwnColorPiece(moveFrom + i, halfMoves%2) == 0|| SquareOccupiedByOppositeColorPiece(moveFrom + i, halfMoves % 2) != 0) {
         if (board[moveFrom + i] == E) {
             validSquares[k] = moveFrom + i;
             k++;
@@ -395,7 +432,7 @@ int RookRules(int moveTo, int moveFrom) {
 
     // Horizontal  direction negative
     i = 1;
-    while (board[moveFrom - i] != F || SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) != 0) {
+    while (board[moveFrom - i] != F && SquareOccupiedByOwnColorPiece(moveFrom - i, halfMoves%2) == 0|| SquareOccupiedByOppositeColorPiece(moveFrom - i, halfMoves % 2) != 0) {
         if (board[moveFrom - i] == E) {
             validSquares[k] = moveFrom - i;
             k++;
@@ -418,6 +455,23 @@ int RookRules(int moveTo, int moveFrom) {
         blackQueensideCastle = 0;
     }
 
+    if(moveTo == AI_MOVE) {
+        int l = 0;
+        if(validSquares[0] == F) {
+            return NO_MOVES;
+        }
+        while(1) {
+
+            if(validSquares[l] != F) {
+                l++;
+            }
+            else {
+                break;
+            }
+        }
+        return validSquares[(rand() % l)];
+    }
+
     for (int j = 0; j < 14; ++j) {
         if (validSquares[j] == moveTo) {
             return 1;
@@ -432,7 +486,7 @@ int BishopRules(int moveTo, int moveFrom) {
     int k = 0;
 
     // Diagonal up right.
-    while (board[moveFrom - (i * 9)] != F ||
+    while (board[moveFrom - (i * 9)] != F && SquareOccupiedByOwnColorPiece(moveFrom - (i * 9), halfMoves % 2) == 0 ||
            SquareOccupiedByOppositeColorPiece(moveFrom - (i * 9), halfMoves % 2) != 0) {
         if (board[moveFrom - (i * 9)] == E) {
             validMoves[k] = moveFrom - (i * 9);
@@ -448,7 +502,7 @@ int BishopRules(int moveTo, int moveFrom) {
 
     // Diagonal down right.
     i = 1;
-    while (board[moveFrom + (i * 11)] != F ||
+    while (board[moveFrom + (i * 11)] != F && SquareOccupiedByOwnColorPiece(moveFrom + (i * 11), halfMoves % 2) == 0 ||
            SquareOccupiedByOppositeColorPiece(moveFrom + (i * 11), halfMoves % 2) != 0) {
         if (board[moveFrom + (i * 11)] == E) {
             validMoves[k] = moveFrom + (i * 11);
@@ -464,7 +518,7 @@ int BishopRules(int moveTo, int moveFrom) {
 
     // Diagonal down left.
     i = 1;
-    while (board[moveFrom + (i * 9)] != F ||
+    while (board[moveFrom + (i * 9)] != F && SquareOccupiedByOwnColorPiece(moveFrom + (i * 9), halfMoves % 2) == 0 ||
            SquareOccupiedByOppositeColorPiece(moveFrom + (i * 9), halfMoves % 2) != 0) {
         if (board[moveFrom + (i * 9)] == E) {
             validMoves[k] = moveFrom + (i * 9);
@@ -480,7 +534,7 @@ int BishopRules(int moveTo, int moveFrom) {
 
     // Diagonal up left.
     i = 1;
-    while (board[moveFrom - (i * 11)] != F ||
+    while (board[moveFrom - (i * 11)] != F && SquareOccupiedByOwnColorPiece(moveFrom = (i * 11), halfMoves % 2) == 0 ||
            SquareOccupiedByOppositeColorPiece(moveFrom - (i * 11), halfMoves % 2) != 0) {
         if (board[moveFrom - (i * 11)] == E) {
             validMoves[k] = moveFrom - (i * 11);
@@ -491,6 +545,22 @@ int BishopRules(int moveTo, int moveFrom) {
             break;
         }
         i++;
+    }
+
+    if(moveTo == AI_MOVE) {
+        int l = 0;
+        if(validMoves[0] == F) {
+            return NO_MOVES;
+        }
+        while(1) {
+            if(validMoves[l] != F) {
+                l++;
+            }
+            else {
+                break;
+            }
+        }
+        return validMoves[(rand() % l)];
     }
 
     for (int j = 0; j < 13; ++j) {
@@ -550,6 +620,21 @@ int KingRules(int moveTo, int moveFrom) {
         Castle(BQC);
     }
 
+    if(moveTo == AI_MOVE) {
+        int l = 0;
+        if(validMoves[0] == F) {
+            return NO_MOVES;
+        }
+        while(1) {
+            if(validMoves[l] != F) {
+                l++;
+            }
+            else {
+                break;
+            }
+        }
+        return validMoves[(rand() % l)];
+    }
 
     for (int i = 0; i < k; ++i) {
         if (validMoves[i] == moveTo) {
@@ -585,6 +670,17 @@ int SquareOccupiedByOppositeColorPiece(int moveTo, int color) {
         return 1;
     }
     else if (color == WHITE && board[moveTo] <= k && board[moveTo] >= p) {
+        return 1;
+    }
+
+    return 0;
+}
+
+int SquareOccupiedByOwnColorPiece(int moveTo, int color) {
+    if (color == BLACK && board[moveTo] <= k && board[moveTo] >= p) {
+        return 1;
+    }
+    else if (color == WHITE && board[moveTo] <= K && board[moveTo] >= P) {
         return 1;
     }
 
@@ -745,6 +841,9 @@ void ToAlgebraicNotation(int indexSquare) {
 }
 
 int RuleCaller(int moveTo, int moveFrom, int switchCase) {
+    if(moveTo < 21) {
+        return NO_MOVES;
+    }
     switch (board[switchCase]) {
         case P:
             return PawnRules(moveTo, moveFrom);
@@ -810,17 +909,39 @@ void AI() {
         printf("we are in check.\n");
     }
     else {
+
         int randomPiece;
+        chooseNewPiece:
         randomPiece = (rand() % 6);
         if(playerColor == WHITE) {
             // random number between enum p and enum k. (7-12).
             randomPiece += 7;
-            printf("We want to move the black piece %d.\n", randomPiece);
+            //printf("We want to move the black piece %d.\n", randomPiece);
         }
         else {
             randomPiece += 1;
-            printf("We want to move the white piece %d.\n", randomPiece);
+            //printf("We want to move the white piece %d.\n", randomPiece);
         }
+
+        // Find the number of pieces of the chosen random type on the board, and then select a random one of them.
+        int randomPieceFoundOnSquare[] = {0, 0, 0, 0, 0, 0, 0, 0};
+        int k = 0;
+        for (int i = 21; i < 98; ++i) {
+            if(board[i] == randomPiece) {
+                //printf("random piece is found on square %d.\n", i);
+                randomPieceFoundOnSquare[k] = i;
+                k++;
+            }
+        }
+
+        int moveFrom = randomPieceFoundOnSquare[rand() % k];
+        int moveTo = RuleCaller(AI_MOVE, moveFrom, moveFrom);
+        if(moveTo == NO_MOVES) {
+            //printf("No moves is available for %d, choosing a new piece.\n", randomPiece);
+            goto chooseNewPiece;
+        }
+        //printf("We can move from square %d to square %d.\n", moveFrom, moveTo);
+        ValidMoveMade(moveTo, moveFrom);
     }
     halfMoves++;
     ReadInput();
