@@ -75,21 +75,6 @@ int board[120] = {
         F, F, F, F, F, F, F, F, F, F
 };
 
-/*int board[120] = {
-        F, F, F, F, F, F, F, F, F, F,
-        F, F, F, F, F, F, F, F, F, F,
-        F, Q, E, E, N, k, E, E, E, F,
-        F, E, E, E, E, E, E, E, E, F,
-        F, E, E, E, E, N, E, E, E, F,
-        F, b, E, E, E, Q, E, E, E, F,
-        F, E, p, E, p, E, E, b, E, F,
-        F, E, E, E, E, E, p, E, E, F,
-        F, E, E, p, E, E, E, E, E, F,
-        F, E, b, E, E, E, K, b, E, F,
-        F, F, F, F, F, F, F, F, F, F,
-        F, F, F, F, F, F, F, F, F, F
-};*/
-
 int main(int argc, const char *argv[]) {
     srand((unsigned)time(NULL));
     rand();
@@ -651,7 +636,7 @@ int QueenRules(int moveTo, int moveFrom) {
 }
 
 void ValidMoveMade(int moveTo, int moveFrom) {
-    printf("DoesKingExist(moveTo) = %d.\nmoveTo != kingSquares[(halfMoves+1)%%2] %d != %d ?\n", DoesKingExist(moveTo), moveTo, kingSquares[(halfMoves+1)%2]);
+    //printf("DoesKingExist(moveTo) = %d.\nmoveTo != kingSquares[(halfMoves+1)%%2] %d != %d ?\n", DoesKingExist(moveTo), moveTo, kingSquares[(halfMoves+1)%2]);
     if (DoesKingExist(moveTo) == 1 && moveTo != kingSquares[(halfMoves+1)%2] && kingSquares[(halfMoves+1)%2] != 0) {
         board[moveTo] = board[moveFrom];
         board[moveFrom] = E;
