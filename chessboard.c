@@ -2,6 +2,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <stdlib.h>
+#include <time.h>
 #include "Definitions.h"
 
 void PrintBoard();
@@ -88,6 +89,8 @@ int board[120] = {
 };*/
 
 int main(int argc, const char *argv[]) {
+    srand((unsigned)time(NULL));
+    rand();
     if(argc > 1) {
         if(strcmp(argv[1], "1") == 0 && ((strcmp((argv[2]), "W") == 0) || (strcmp((argv[2]), "w") == 0))) {
             printf("1 player starting as white.\n");
@@ -807,7 +810,17 @@ void AI() {
         printf("we are in check.\n");
     }
     else {
-        printf("random move.\n");
+        int randomPiece;
+        randomPiece = (rand() % 6);
+        if(playerColor == WHITE) {
+            // random number between enum p and enum k. (7-12).
+            randomPiece += 7;
+            printf("We want to move the black piece %d.\n", randomPiece);
+        }
+        else {
+            randomPiece += 1;
+            printf("We want to move the white piece %d.\n", randomPiece);
+        }
     }
     halfMoves++;
     ReadInput();
