@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <ctype.h>
+#include <string.h>
+#include <stdlib.h>
 #include "Definitions.h"
 
 void PrintBoard();
@@ -40,6 +42,10 @@ void DiscoverCheck(int number, int moveFrom);
 
 int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 
+void AvailableCommands();
+
+int playerVsComputer = 0;
+int playerColor = 0;
 int halfMoves = 0;
 int whiteQueensideCastle = 1;
 int whiteKingsideCastle = 1;
@@ -78,8 +84,26 @@ int board[120] = {
         F, F, F, F, F, F, F, F, F, F
 };*/
 
-int main() {
-
+int main(int argc, const char *argv[]) {
+    if(argc > 1) {
+        if(strcmp(argv[1], "1") == 0 && ((strcmp((argv[2]), "W") == 0) || (strcmp((argv[2]), "w") == 0))) {
+            printf("1 player starting as white.\n");
+            playerVsComputer = 1;
+            playerColor = WHITE;
+        }
+        else if (strcmp(argv[1], "1") == 0 && ((strcmp((argv[2]), "B") == 0) || (strcmp((argv[2]), "b") == 0))) {
+            printf("1 player starting as black.\n");
+            playerVsComputer = 1;
+            playerColor = BLACK;
+        }
+        else if(strcmp(argv[1], "2") == 0) {
+            printf("2 players.\n");
+            playerVsComputer = 0;
+        }
+    } else {
+        printf("No arguments registered.\nYou can start a new game by fx. typing 'chessboard 1 w',\n"
+                       "which would start a new game against the computer where you are playing as white.\n\n");
+    }
     PrintBoard();
     ReadInput();
     return 0;
@@ -163,7 +187,7 @@ void ReadInput() {
     else {
         // print help (available commands).
 
-        printf("Invalid move.\n");
+        AvailableCommands();
         ReadInput();
     }
 }
@@ -515,8 +539,6 @@ int KingRules(int moveTo, int moveFrom) {
         }
     }
 
-    //TODO(Implement castling).
-
     return 0;
 }
 
@@ -525,7 +547,7 @@ int QueenRules(int moveTo, int moveFrom) {
 }
 
 void ValidMoveMade(int moveTo, int moveFrom) {
-    if (DoesKingExist(moveTo) == 1) {
+    if (DoesKingExist(moveTo) == 1 && moveTo != kingSquares[(halfMoves+1)%2] && kingSquares[(halfMoves+1)%2] != 0) {
         board[moveTo] = board[moveFrom];
         board[moveFrom] = E;
         Check(moveTo, moveFrom);
@@ -535,6 +557,7 @@ void ValidMoveMade(int moveTo, int moveFrom) {
     }
     else {
         printf("Game is over!\n");
+        exit(0);
     }
 }
 
@@ -555,25 +578,25 @@ void Castle(int castle) {
         board[95] = E;
         board[96] = R;
         board[98] = E;
-        kingSquares[0] = 97;
+        kingSquares[WHITE] = 97;
     } else if (castle == WQC) {
         board[91] = E;
         board[94] = R;
         board[93] = K;
         board[95] = E;
-        kingSquares[0] = 93;
+        kingSquares[WHITE] = 93;
     } else if (castle == BKC) {
         board[25] = E;
         board[28] = E;
         board[26] = r;
         board[27] = k;
-        kingSquares[1] = 27;
+        kingSquares[BLACK] = 27;
     } else {
         board[21] = E;
         board[25] = E;
         board[24] = r;
         board[23] = k;
-        kingSquares[1] = 23;
+        kingSquares[BLACK] = 23;
     }
 
     // disable future castling availability
@@ -653,7 +676,7 @@ void Promotion(int moveTo, int moveFrom, int color) {
 }
 
 int DoesKingExist(int moveTo) {
-    if (board[kingSquares[WHITE]] == K || board[kingSquares[BLACK]] == k || board[moveTo] == K || board[moveTo] == k) {
+    if (board[kingSquares[WHITE]] == K && board[kingSquares[BLACK]] == k || board[moveTo] == K && board[moveTo] == k) {
         return 1;
     }
     return 0;
@@ -755,4 +778,9 @@ void DiscoverCheck(int number, int moveFrom) {
             ToAlgebraicNotation(moveFrom - j);
         }
     }
+}
+
+void AvailableCommands() {
+    printf("Moves should be entered by their algebraic 'coordinates', like this"
+                   "g1f3.\n");
 }

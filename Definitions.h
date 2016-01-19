@@ -86,3 +86,5 @@ extern int blackQueensideCastle;
 extern int enPassantSquare;
 extern int halfMovesSinceEnPassantSquare;
 extern int kingSquares[];
+extern int playerVsComputer;
+extern int playerColor;
