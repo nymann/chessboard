@@ -534,7 +534,7 @@ int BishopRules(int moveTo, int moveFrom) {
 
     // Diagonal up left.
     i = 1;
-    while (board[moveFrom - (i * 11)] != F && SquareOccupiedByOwnColorPiece(moveFrom = (i * 11), halfMoves % 2) == 0 ||
+    while (board[moveFrom - (i * 11)] != F && SquareOccupiedByOwnColorPiece(moveFrom - (i * 11), halfMoves % 2) == 0 ||
            SquareOccupiedByOppositeColorPiece(moveFrom - (i * 11), halfMoves % 2) != 0) {
         if (board[moveFrom - (i * 11)] == E) {
             validMoves[k] = moveFrom - (i * 11);
@@ -651,9 +651,11 @@ int QueenRules(int moveTo, int moveFrom) {
 }
 
 void ValidMoveMade(int moveTo, int moveFrom) {
+    printf("DoesKingExist(moveTo) = %d.\nmoveTo != kingSquares[(halfMoves+1)%%2] %d != %d ?\n", DoesKingExist(moveTo), moveTo, kingSquares[(halfMoves+1)%2]);
     if (DoesKingExist(moveTo) == 1 && moveTo != kingSquares[(halfMoves+1)%2] && kingSquares[(halfMoves+1)%2] != 0) {
         board[moveTo] = board[moveFrom];
         board[moveFrom] = E;
+        check = 0;
         Check(moveTo, moveFrom);
         halfMoves++;
         PrintBoard();
@@ -802,6 +804,7 @@ int Check(int moveTo, int moveFrom) {
         check = 1;
         printf("Check from ");
         ToAlgebraicNotation(moveTo);
+        printf("\n");
     }
     // Check for discover checks.
     int moveFromRow = moveFrom / 10;
@@ -823,9 +826,11 @@ int Check(int moveTo, int moveFrom) {
     int diagonalKingSquareUp = (kingSquares[(halfMoves + 1) % 2]) % 11;
 
     if (diagonalMoveFromUp == diagonalKingSquareUp) {
+        check = 1;
         DiscoverCheck(11, moveFrom);
     }
     else if (diagonalMoveFromDown == diagonalKingSquareDown) {
+        check = 1;
         DiscoverCheck(9, moveFrom);
     }
 
@@ -904,6 +909,18 @@ void AvailableCommands() {
 void AI() {
     if (check == 1) {
         printf("we are in check.\n");
+        int moveFrom = kingSquares[halfMoves%2];
+        int moveTo = RuleCaller(AI_MOVE, moveFrom, moveFrom);
+        if(moveTo < 21 || moveTo > 98) {
+            printf("You have bested me!\n");
+            exit(0);
+        }
+        printf("Computer moved from ");
+        ToAlgebraicNotation(moveFrom);
+        printf(" (%d), to ");
+        ToAlgebraicNotation(moveTo);
+        printf(" (%d).\n\n", moveFrom, moveTo);
+        ValidMoveMade(moveTo, moveFrom);
     }
     else {
 
