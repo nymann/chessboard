@@ -6,6 +6,8 @@
 
 void PrintBoard();
 
+void AI();
+
 int RuleCaller(int moveTo, int moveFrom, int switchCase);
 
 int KnightRules(int moveFrom, int moveTo);
@@ -44,6 +46,7 @@ int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 
 void AvailableCommands();
 
+int check = 0;
 int playerVsComputer = 0;
 int playerColor = 0;
 int halfMoves = 0;
@@ -102,10 +105,18 @@ int main(int argc, const char *argv[]) {
         }
     } else {
         printf("No arguments registered.\nYou can start a new game by fx. typing 'chessboard 1 w',\n"
-                       "which would start a new game against the computer where you are playing as white.\n\n");
+                       "which would start a new game against the computer where you are playing as white.\n"
+                       "Since you didn't input any arguments, a multiplayer game has been selected.\n\n");
     }
     PrintBoard();
-    ReadInput();
+
+    if(halfMoves % 2 == playerColor && playerVsComputer == 1) {
+        ReadInput();
+    }
+    else {
+        AI();
+    }
+
     return 0;
 }
 
@@ -175,20 +186,25 @@ void PrintBoard() {
 }
 
 void ReadInput() {
-    char move[4];
-    scanf("%s", &move);
-
-    // Checking if the input is within the restricted files (a-h) and ranks 1-8.
-    if (((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') &&
-        ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
-        halfMovesSinceEnPassantSquare++;
-        Move(move);
+    if(halfMoves % 2 != playerColor && playerVsComputer == 1) {
+        AI();
     }
     else {
-        // print help (available commands).
+        char move[4];
+        scanf("%s", &move);
 
-        AvailableCommands();
-        ReadInput();
+        // Checking if the input is within the restricted files (a-h) and ranks 1-8.
+        if (((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') &&
+            ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
+            halfMovesSinceEnPassantSquare++;
+            Move(move);
+        }
+        else {
+            // print help (available commands).
+
+            AvailableCommands();
+            ReadInput();
+        }
     }
 }
 
@@ -684,6 +700,7 @@ int DoesKingExist(int moveTo) {
 
 int Check(int moveTo, int moveFrom) {
     if (RuleCaller(kingSquares[(halfMoves + 1) % 2], moveTo, moveTo) == 1) {
+        check = 1;
         printf("Check from ");
         ToAlgebraicNotation(moveTo);
     }
@@ -782,5 +799,16 @@ void DiscoverCheck(int number, int moveFrom) {
 
 void AvailableCommands() {
     printf("Moves should be entered by their algebraic 'coordinates', like this"
-                   "g1f3.\n");
+                   " g1f3.\n");
+}
+
+void AI() {
+    if (check == 1) {
+        printf("we are in check.\n");
+    }
+    else {
+        printf("random move.\n");
+    }
+    halfMoves++;
+    ReadInput();
 }

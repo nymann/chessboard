@@ -88,3 +88,4 @@ extern int halfMovesSinceEnPassantSquare;
 extern int kingSquares[];
 extern int playerVsComputer;
 extern int playerColor;
+extern int check;
