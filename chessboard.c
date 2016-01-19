@@ -115,6 +115,7 @@ int main(int argc, const char *argv[]) {
 
 void PrintBoard() {
     // Insert CLEAR SCREEN COMMAND HERE.
+    printf("\n\n\n\n\n\n\n");
     printf("    a   b   c   d   e   f   g   h\n");
     for (int i = 2; i < 10; i++) {
         printf("  +---+---+---+---+---+---+---+---+\n");
@@ -903,9 +904,9 @@ void AI() {
         }
         printf("Computer moved from ");
         ToAlgebraicNotation(moveFrom);
-        printf(" (%d), to ");
+        printf(" to ");
         ToAlgebraicNotation(moveTo);
-        printf(" (%d).\n\n", moveFrom, moveTo);
+        printf(".\n");
         ValidMoveMade(moveTo, moveFrom);
     }
     else {
@@ -943,9 +944,9 @@ void AI() {
         //printf("We can move from square %d to square %d.\n", moveFrom, moveTo);
         printf("Computer moved from ");
         ToAlgebraicNotation(moveFrom);
-        printf(" (%d), to ");
+        printf(" to ");
         ToAlgebraicNotation(moveTo);
-        printf(" (%d).\n\n", moveFrom, moveTo);
+        printf(".\n");
         ValidMoveMade(moveTo, moveFrom);
     }
     halfMoves++;
