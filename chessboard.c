@@ -114,6 +114,7 @@ int main(int argc, const char *argv[]) {
 }
 
 void PrintBoard() {
+    // Insert CLEAR SCREEN COMMAND HERE.
     printf("    a   b   c   d   e   f   g   h\n");
     for (int i = 2; i < 10; i++) {
         printf("  +---+---+---+---+---+---+---+---+\n");
