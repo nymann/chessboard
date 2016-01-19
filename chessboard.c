@@ -837,13 +837,10 @@ void ToAlgebraicNotation(int indexSquare) {
     int row = indexSquare / 10;
     algebraic[0] = (char) (indexSquare % 10 + 96);
     algebraic[1] = (char) (10 - row + 48);
-    printf("%c%c.\n", algebraic[0], algebraic[1]);
+    printf("%c%c", algebraic[0], algebraic[1]);
 }
 
 int RuleCaller(int moveTo, int moveFrom, int switchCase) {
-    if(moveTo < 21) {
-        return NO_MOVES;
-    }
     switch (board[switchCase]) {
         case P:
             return PawnRules(moveTo, moveFrom);
@@ -936,11 +933,16 @@ void AI() {
 
         int moveFrom = randomPieceFoundOnSquare[rand() % k];
         int moveTo = RuleCaller(AI_MOVE, moveFrom, moveFrom);
-        if(moveTo == NO_MOVES) {
+        if(moveTo < 21 || moveTo > 98) {
             //printf("No moves is available for %d, choosing a new piece.\n", randomPiece);
             goto chooseNewPiece;
         }
         //printf("We can move from square %d to square %d.\n", moveFrom, moveTo);
+        printf("Computer moved from ");
+        ToAlgebraicNotation(moveFrom);
+        printf(" (%d), to ");
+        ToAlgebraicNotation(moveTo);
+        printf(" (%d).\n\n", moveFrom, moveTo);
         ValidMoveMade(moveTo, moveFrom);
     }
     halfMoves++;
