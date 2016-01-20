@@ -1043,11 +1043,12 @@ void RestartGame() {
     halfMovesSinceEnPassantSquare = 0;
     kingSquares[WHITE] = 95;
     kingSquares[BLACK] = 25;
-
     for (int i = 0; i < SQUARES; ++i) {
         board[i] = defaultBoard[i];
     }
-    // Clear screen.
+
+    printf("\033[2J\033[1;1H"); // clears screen on zybo.
+
     NewGameNoArguments();
     PrintBoard();
     if(halfMoves % 2 == playerColor && playerVsComputer == 1) {
