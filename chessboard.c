@@ -49,6 +49,7 @@ int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 
 void AvailableCommands();
 
+int updateKingSquare = 0;
 int check = 0;
 int playerVsComputer = 0;
 int playerColor = 0;
@@ -115,7 +116,6 @@ int main(int argc, const char *argv[]) {
 
 void PrintBoard() {
     // Insert CLEAR SCREEN COMMAND HERE.
-    printf("\n\n\n\n\n\n\n");
     printf("    a   b   c   d   e   f   g   h\n");
     for (int i = 2; i < 10; i++) {
         printf("  +---+---+---+---+---+---+---+---+\n");
@@ -620,12 +620,13 @@ int KingRules(int moveTo, int moveFrom) {
                 break;
             }
         }
+        updateKingSquare = 1;
         return validMoves[(rand() % l)];
     }
 
     for (int i = 0; i < k; ++i) {
         if (validMoves[i] == moveTo) {
-            kingSquares[halfMoves % 2] = moveTo;
+            updateKingSquare = 1;
             return 1;
         }
     }
@@ -638,18 +639,37 @@ int QueenRules(int moveTo, int moveFrom) {
 }
 
 void ValidMoveMade(int moveTo, int moveFrom) {
-    //printf("DoesKingExist(moveTo) = %d.\nmoveTo != kingSquares[(halfMoves+1)%%2] %d != %d ?\n", DoesKingExist(moveTo), moveTo, kingSquares[(halfMoves+1)%2]);
-    if (DoesKingExist(moveTo) == 1 && moveTo != kingSquares[(halfMoves+1)%2] && kingSquares[(halfMoves+1)%2] != 0) {
+    if (DoesKingExist(moveTo) == 1) {
         board[moveTo] = board[moveFrom];
         board[moveFrom] = E;
         check = 0;
         Check(moveTo, moveFrom);
+        if(updateKingSquare == 1) {
+            kingSquares[halfMoves%2] = moveTo;
+            updateKingSquare = 0;
+        }
         halfMoves++;
+        if((halfMoves+1)%2 == WHITE) {
+            printf("White ");
+        }
+        else {
+            printf("Black ");
+        }
+        printf("played: ");
+        ToAlgebraicNotation(moveFrom);
+        ToAlgebraicNotation(moveTo);
+        printf(".\n\n");
+
         PrintBoard();
         ReadInput();
     }
     else {
-        printf("Game is over!\n");
+        if(board[kingSquares[WHITE]] == K || board[moveTo] == K) {
+            printf("White wins, by capturing blacks king.\n");
+        }
+        else {
+            printf("Black wins, by capturing whites king.\n");
+        }
         exit(0);
     }
 }
@@ -780,7 +800,7 @@ void Promotion(int moveTo, int moveFrom, int color) {
 }
 
 int DoesKingExist(int moveTo) {
-    if (board[kingSquares[WHITE]] == K && board[kingSquares[BLACK]] == k || board[moveTo] == K && board[moveTo] == k) {
+    if ((board[kingSquares[WHITE]] == K || board[moveTo] == K) && (board[kingSquares[BLACK]] == k || board[moveTo] == k)) {
         return 1;
     }
     return 0;
@@ -813,11 +833,11 @@ int Check(int moveTo, int moveFrom) {
     int diagonalKingSquareUp = (kingSquares[(halfMoves + 1) % 2]) % 11;
 
     if (diagonalMoveFromUp == diagonalKingSquareUp) {
-        check = 1;
+        //check = 1;
         DiscoverCheck(11, moveFrom);
     }
     else if (diagonalMoveFromDown == diagonalKingSquareDown) {
-        check = 1;
+        //check = 1;
         DiscoverCheck(9, moveFrom);
     }
 
@@ -871,6 +891,7 @@ void DiscoverCheck(int number, int moveFrom) {
         }
         if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom + i), (moveFrom + i)) == 1 &&
              SquareOccupiedByOppositeColorPiece(moveFrom + i, (halfMoves + 1) % 2) == 1)) {
+            check = 1;
             printf("Check from ");
             ToAlgebraicNotation(moveFrom + i);
         }
@@ -882,6 +903,7 @@ void DiscoverCheck(int number, int moveFrom) {
         }
         if ((RuleCaller(kingSquares[(halfMoves + 1) % 2], (moveFrom - j), (moveFrom - j)) == 1 &&
              SquareOccupiedByOppositeColorPiece(moveFrom - j, (halfMoves + 1) % 2) == 1)) {
+            check = 1;
             printf("Check from ");
             ToAlgebraicNotation(moveFrom - j);
         }
@@ -895,18 +917,17 @@ void AvailableCommands() {
 
 void AI() {
     if (check == 1) {
-        printf("we are in check.\n");
         int moveFrom = kingSquares[halfMoves%2];
         int moveTo = RuleCaller(AI_MOVE, moveFrom, moveFrom);
         if(moveTo < 21 || moveTo > 98) {
             printf("You have bested me!\n");
             exit(0);
         }
-        printf("Computer moved from ");
-        ToAlgebraicNotation(moveFrom);
-        printf(" to ");
-        ToAlgebraicNotation(moveTo);
-        printf(".\n");
+        //printf("Computer moved from ");
+        //ToAlgebraicNotation(moveFrom);
+        //printf(" to ");
+        //ToAlgebraicNotation(moveTo);
+        //printf(".\n");
         ValidMoveMade(moveTo, moveFrom);
     }
     else {
@@ -917,11 +938,9 @@ void AI() {
         if(playerColor == WHITE) {
             // random number between enum p and enum k. (7-12).
             randomPiece += 7;
-            //printf("We want to move the black piece %d.\n", randomPiece);
         }
         else {
             randomPiece += 1;
-            //printf("We want to move the white piece %d.\n", randomPiece);
         }
 
         // Find the number of pieces of the chosen random type on the board, and then select a random one of them.
@@ -929,7 +948,6 @@ void AI() {
         int k = 0;
         for (int i = 21; i < 98; ++i) {
             if(board[i] == randomPiece) {
-                //printf("random piece is found on square %d.\n", i);
                 randomPieceFoundOnSquare[k] = i;
                 k++;
             }
@@ -938,15 +956,14 @@ void AI() {
         int moveFrom = randomPieceFoundOnSquare[rand() % k];
         int moveTo = RuleCaller(AI_MOVE, moveFrom, moveFrom);
         if(moveTo < 21 || moveTo > 98) {
-            //printf("No moves is available for %d, choosing a new piece.\n", randomPiece);
             goto chooseNewPiece;
         }
-        //printf("We can move from square %d to square %d.\n", moveFrom, moveTo);
-        printf("Computer moved from ");
+
+        /*printf("Computer moved from ");
         ToAlgebraicNotation(moveFrom);
         printf(" to ");
         ToAlgebraicNotation(moveTo);
-        printf(".\n");
+        printf(".\n");*/
         ValidMoveMade(moveTo, moveFrom);
     }
     halfMoves++;
