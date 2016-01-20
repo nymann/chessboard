@@ -648,8 +648,7 @@ void ValidMoveMade(int moveTo, int moveFrom) {
             kingSquares[halfMoves%2] = moveTo;
             updateKingSquare = 0;
         }
-        halfMoves++;
-        if((halfMoves+1)%2 == WHITE) {
+        if(halfMoves%2 == WHITE) {
             printf("White ");
         }
         else {
@@ -660,7 +659,17 @@ void ValidMoveMade(int moveTo, int moveFrom) {
         ToAlgebraicNotation(moveTo);
         printf(".\n\n");
 
+        // Sound here.
+        if((halfMoves+1)%2 == WHITE) {
+            // White to move. INSERT SOUND FUNCTION CALL HERE.
+        }
+        else {
+            // Black to move. INSERT SOUND FUNCTION CALL HERE.
+        }
+
+        halfMoves++;
         PrintBoard();
+        // Lyd her.
         ReadInput();
     }
     else {
