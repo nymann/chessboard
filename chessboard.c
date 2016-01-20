@@ -77,6 +77,21 @@ int board[120] = {
         F, F, F, F, F, F, F, F, F, F,
         F, F, F, F, F, F, F, F, F, F
 };
+const int defaultBoard[120] = {
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, r, n, b, q, k, b, n, r, F,
+        F, p, p, p, p, p, p, p, p, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, E, E, E, E, E, E, E, E, F,
+        F, P, P, P, P, P, P, P, P, F,
+        F, R, N, B, Q, K, B, N, R, F,
+        F, F, F, F, F, F, F, F, F, F,
+        F, F, F, F, F, F, F, F, F, F
+};
+
 
 int main(int argc, const char *argv[]) {
     srand((unsigned)time(NULL));
@@ -1002,5 +1017,37 @@ void NewGameNoArguments() {
     else {
         printf("Input not supported.\n");
         NewGameNoArguments();
+    }
+}
+
+void RestartGame() {
+    updateKingSquare = 0;
+    check = 0;
+    playerVsComputer = 0;
+    playerColor = 0;
+    halfMoves = 0;
+    whiteQueensideCastle = 1;
+    whiteKingsideCastle = 1;
+    blackKingsideCastle = 1;
+    blackQueensideCastle = 1;
+    enPassantSquare = 0;
+    halfMovesSinceEnPassantSquare = 0;
+    kingSquares[WHITE] = 95;
+    kingSquares[BLACK] = 25;
+
+    for (int i = 0; i < SQUARES; ++i) {
+        board[i] = defaultBoard[i];
+    }
+    // Clear screen.
+    NewGameNoArguments();
+    PrintBoard();
+    if(halfMoves % 2 == playerColor && playerVsComputer == 1) {
+        ReadInput();
+    }
+    else if(playerVsComputer == 1){
+        AI();
+    }
+    else {
+        ReadInput();
     }
 }
