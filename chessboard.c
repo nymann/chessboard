@@ -49,6 +49,8 @@ int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 
 void AvailableCommands();
 
+void NewGameNoArguments();
+
 int updateKingSquare = 0;
 int check = 0;
 int playerVsComputer = 0;
@@ -95,10 +97,7 @@ int main(int argc, const char *argv[]) {
             playerVsComputer = 0;
         }
     } else {
-        playerVsComputer = 0;
-        printf("No arguments registered.\nYou can start a new game by fx. typing 'chessboard 1 w',\n"
-                       "which would start a new game against the computer where you are playing as white.\n"
-                       "Since you didn't input any arguments, a multiplayer game has been selected.\n\n");
+        NewGameNoArguments();
     }
     PrintBoard();
 
@@ -126,50 +125,50 @@ void PrintBoard() {
                     printf("   |");
                     break;
                 case P:
-                    printf(" P |");
+                    printf(" \u2659 |");
                     break;
 
                 case R:
-                    printf(" R |");
+                    printf(" \u2656 |");
                     break;
 
                 case N:
-                    printf(" N |");
+                    printf(" \u2658 |");
                     break;
 
                 case B:
-                    printf(" B |");
+                    printf(" \u2657 |");
                     break;
 
                 case Q:
-                    printf(" Q |");
+                    printf(" \u2655 |");
                     break;
 
                 case K:
-                    printf(" K |");
+                    printf(" \u2654 |");
                     break;
                 case p:
-                    printf(" p |");
+                    printf(" \u265F |");
                     break;
 
                 case r:
-                    printf(" r |");
+                    printf(" \u265C |");
                     break;
 
                 case n:
-                    printf(" n |");
+                    printf(" \u265E |");
                     break;
 
                 case b:
-                    printf(" b |");
+                    printf(" \u265D |");
                     break;
 
                 case q:
-                    printf(" q |");
+                    printf(" \u265B |");
                     break;
 
                 case k:
-                    printf(" k |");
+                    printf(" \u265A |");
                     break;
                 default:
                     break;
@@ -181,6 +180,12 @@ void PrintBoard() {
 }
 
 void ReadInput() {
+    if(halfMoves%2 == WHITE) {
+        printf("White to move..\n");
+    }
+    else {
+        printf("Black to move..\n");
+    }
     if(halfMoves % 2 != playerColor && playerVsComputer == 1) {
         AI();
     }
@@ -669,7 +674,6 @@ void ValidMoveMade(int moveTo, int moveFrom) {
 
         halfMoves++;
         PrintBoard();
-        // Lyd her.
         ReadInput();
     }
     else {
@@ -932,11 +936,6 @@ void AI() {
             printf("You have bested me!\n");
             exit(0);
         }
-        //printf("Computer moved from ");
-        //ToAlgebraicNotation(moveFrom);
-        //printf(" to ");
-        //ToAlgebraicNotation(moveTo);
-        //printf(".\n");
         ValidMoveMade(moveTo, moveFrom);
     }
     else {
@@ -977,4 +976,31 @@ void AI() {
     }
     halfMoves++;
     ReadInput();
+}
+
+void NewGameNoArguments() {
+    char input[256];
+    printf("Choose game mode. Type help, for possible modes.\n");
+    scanf(" %s", input);
+    if(input[0] == '2') {
+        playerVsComputer = 0;
+    }
+    else if(input[0] == '1') {
+        playerVsComputer = 1;
+        if(toupper(input[1]) == 'W') {
+            playerColor = WHITE;
+        }
+        else if(toupper(input[1]) == 'B') {
+            playerColor = BLACK;
+        }
+        else {
+            printf("Player color not specified, you have been assigned a random piece color.\n");
+            playerColor = (rand() % 1);
+        }
+
+    }
+    else {
+        printf("Input not supported.\n");
+        NewGameNoArguments();
+    }
 }
