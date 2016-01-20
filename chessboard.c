@@ -50,7 +50,7 @@ int SquareOccupiedByOppositeColorPiece(int moveTo, int color);
 void AvailableCommands();
 
 void NewGameNoArguments();
-
+void RestartGame();
 int updateKingSquare = 0;
 int check = 0;
 int playerVsComputer = 0;
@@ -207,7 +207,16 @@ void ReadInput() {
     else {
         char move[4];
         scanf("%s", &move);
-
+        if(toupper(move[0]) == 'R') {
+            if(halfMoves%2==WHITE) {
+                printf("White resigned.\n\n");
+                RestartGame();
+            }
+            else {
+                printf("Black resigned.\n\n");
+                RestartGame();
+            }
+        }
         // Checking if the input is within the restricted files (a-h) and ranks 1-8.
         if (((move[0] >= 'a' && move[0] <= 'h') && move[1] >= '1' && move[1] <= '8') &&
             ((move[2] >= 'a' && move[2] <= 'h') && move[3] >= '1' && move[3] <= '8')) {
